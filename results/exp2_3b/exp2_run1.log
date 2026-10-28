@@ -1,0 +1,31 @@
+/opt/pytorch/lib/python3.12/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+08:19:01 device=cuda dtype=torch.bfloat16
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 4945.63it/s]
+Loading weights:   0%|          | 0/254 [00:00<?, ?it/s]Loading weights: 100%|██████████| 254/254 [00:00<00:00, 4368.58it/s]
+08:19:32 calibration 199680 tokens, eval 16384 tokens
+08:19:55 collected 16384 rows for 64 inputs (23s, 7.5 GB on CPU)
+08:19:55 == exact
+08:20:28 exact                  alpha_sample=0.743 alpha_greedy=0.735 KL=0.395 nll=2.947 | gamma=5: 2.13 tok/round alpha_hat=0.727 hist=[153, 81, 70, 62, 45, 101] | read 1946 MB (+525 head) fit 0s eval 33s
+08:20:28 == int4:all
+08:20:59 int4:all               alpha_sample=0.658 alpha_greedy=0.648 KL=0.646 nll=3.224 | gamma=5: 1.73 tok/round alpha_hat=0.666 hist=[176, 102, 83, 51, 33, 67] | read 487 MB (+525 head) fit 1s eval 30s
+08:20:59 == lut:nearest:8:all
+08:21:06   fit nearest L=8: layer 0 done (7s)
+08:21:10   fit nearest L=8: layer 1 done (11s)
+08:21:14   fit nearest L=8: layer 2 done (16s)
+08:21:19   fit nearest L=8: layer 3 done (20s)
+08:21:23   fit nearest L=8: layer 4 done (24s)
+08:21:27   fit nearest L=8: layer 5 done (28s)
+08:21:31   fit nearest L=8: layer 6 done (33s)
+08:21:36   fit nearest L=8: layer 7 done (37s)
+08:21:40   fit nearest L=8: layer 8 done (41s)
+08:21:44   fit nearest L=8: layer 9 done (46s)
+08:21:49   fit nearest L=8: layer 10 done (50s)
+08:21:53   fit nearest L=8: layer 11 done (54s)
+08:21:57   fit nearest L=8: layer 12 done (58s)
+08:22:01   fit nearest L=8: layer 13 done (63s)
+08:22:06   fit nearest L=8: layer 14 done (67s)
+08:22:10   fit nearest L=8: layer 15 done (71s)
+08:54:22 lut:nearest:8:all      alpha_sample=0.031 alpha_greedy=0.022 KL=7.695 nll=10.243 | gamma=5: 0.01 tok/round alpha_hat=0.010 hist=[507, 5, 0, 0, 0, 0] | read 122 MB (+525 head) fit 72s eval 1931s
+08:54:22 == lut:tree:8:all
+08:55:41   fit tree L=8: layer 0 done (80s)

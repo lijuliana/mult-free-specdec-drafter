@@ -1,0 +1,94 @@
+/opt/pytorch/lib/python3.12/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+09:38:55 device=cuda dtype=torch.bfloat16
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 4385.40it/s]
+Loading weights:   0%|          | 0/254 [00:00<?, ?it/s]Loading weights: 100%|██████████| 254/254 [00:00<00:00, 4549.35it/s]
+09:39:12 calibration 99840 tokens, eval 16384 tokens
+09:39:24 collected 16384 rows for 64 inputs (12s, 7.5 GB on CPU)
+09:39:24 == lut:nearest:8:down@4-15+seq
+09:39:32   fit nearest L=8: layer 4 done (3s)
+09:39:41   fit nearest L=8: layer 5 done (3s)
+09:39:51   fit nearest L=8: layer 6 done (3s)
+09:40:01   fit nearest L=8: layer 7 done (3s)
+09:40:11   fit nearest L=8: layer 8 done (3s)
+09:40:22   fit nearest L=8: layer 9 done (3s)
+09:40:33   fit nearest L=8: layer 10 done (3s)
+09:40:45   fit nearest L=8: layer 11 done (3s)
+09:40:58   fit nearest L=8: layer 12 done (3s)
+09:41:11   fit nearest L=8: layer 13 done (3s)
+09:41:25   fit nearest L=8: layer 14 done (3s)
+09:41:39   fit nearest L=8: layer 15 done (3s)
+09:42:19 lut:nearest:8:down@4-15+seq alpha_sample=0.096 alpha_greedy=0.223 KL=4.417 nll=6.985 | gamma=5: 0.29 tok/round alpha_hat=0.228 hist=[393, 99, 13, 4, 1, 2] | read 1569 MB (+525 head) fit 135s eval 40s
+09:42:19 == lut:nearest:8:attn@4-15+seq
+09:42:27   fit nearest L=8: layer 4 done (2s)
+09:42:35   fit nearest L=8: layer 5 done (2s)
+09:42:44   fit nearest L=8: layer 6 done (2s)
+09:42:53   fit nearest L=8: layer 7 done (2s)
+09:43:02   fit nearest L=8: layer 8 done (2s)
+09:43:12   fit nearest L=8: layer 9 done (2s)
+09:43:23   fit nearest L=8: layer 10 done (2s)
+09:43:34   fit nearest L=8: layer 11 done (2s)
+09:43:45   fit nearest L=8: layer 12 done (2s)
+09:43:57   fit nearest L=8: layer 13 done (2s)
+09:44:09   fit nearest L=8: layer 14 done (2s)
+09:44:21   fit nearest L=8: layer 15 done (2s)
+09:45:00 lut:nearest:8:attn@4-15+seq alpha_sample=0.411 alpha_greedy=0.413 KL=1.812 nll=4.436 | gamma=5: 0.60 tok/round alpha_hat=0.379 hist=[318, 126, 44, 11, 5, 8] | read 1710 MB (+525 head) fit 123s eval 39s
+09:45:00 == lut:nearest:8:all@4-15+seq
+09:45:12   fit nearest L=8: layer 4 done (6s)
+09:45:26   fit nearest L=8: layer 5 done (6s)
+09:45:41   fit nearest L=8: layer 6 done (6s)
+09:45:58   fit nearest L=8: layer 7 done (6s)
+09:46:16   fit nearest L=8: layer 8 done (6s)
+09:46:37   fit nearest L=8: layer 9 done (6s)
+09:46:59   fit nearest L=8: layer 10 done (6s)
+09:47:23   fit nearest L=8: layer 11 done (6s)
+09:47:49   fit nearest L=8: layer 12 done (6s)
+09:48:16   fit nearest L=8: layer 13 done (6s)
+09:48:45   fit nearest L=8: layer 14 done (6s)
+09:49:16   fit nearest L=8: layer 15 done (6s)
+09:50:26 lut:nearest:8:all@4-15+seq alpha_sample=0.060 alpha_greedy=0.014 KL=5.820 nll=8.385 | gamma=5: 0.01 tok/round alpha_hat=0.008 hist=[508, 4, 0, 0, 0, 0] | read 578 MB (+525 head) fit 255s eval 70s
+09:50:26 == lut:nearest:8:down@2-15+seq
+09:50:35   fit nearest L=8: layer 2 done (3s)
+09:50:43   fit nearest L=8: layer 3 done (3s)
+09:50:53   fit nearest L=8: layer 4 done (3s)
+09:51:03   fit nearest L=8: layer 5 done (3s)
+09:51:13   fit nearest L=8: layer 6 done (3s)
+09:51:24   fit nearest L=8: layer 7 done (3s)
+09:51:36   fit nearest L=8: layer 8 done (3s)
+09:51:48   fit nearest L=8: layer 9 done (3s)
+09:52:00   fit nearest L=8: layer 10 done (3s)
+09:52:13   fit nearest L=8: layer 11 done (3s)
+09:52:27   fit nearest L=8: layer 12 done (3s)
+09:52:41   fit nearest L=8: layer 13 done (3s)
+09:52:56   fit nearest L=8: layer 14 done (3s)
+09:53:11   fit nearest L=8: layer 15 done (3s)
+09:53:52 lut:nearest:8:down@2-15+seq alpha_sample=0.098 alpha_greedy=0.217 KL=4.384 nll=6.965 | gamma=5: 0.27 tok/round alpha_hat=0.214 hist=[404, 90, 9, 6, 2, 1] | read 1506 MB (+525 head) fit 164s eval 41s
+09:53:52 == lut:nearest:16:down@4-15+seq
+09:53:59   fit nearest L=16: layer 4 done (1s)
+09:54:06   fit nearest L=16: layer 5 done (1s)
+09:54:14   fit nearest L=16: layer 6 done (1s)
+09:54:21   fit nearest L=16: layer 7 done (1s)
+09:54:29   fit nearest L=16: layer 8 done (1s)
+09:54:37   fit nearest L=16: layer 9 done (1s)
+09:54:46   fit nearest L=16: layer 10 done (1s)
+09:54:54   fit nearest L=16: layer 11 done (1s)
+09:55:03   fit nearest L=16: layer 12 done (1s)
+09:55:12   fit nearest L=16: layer 13 done (1s)
+09:55:22   fit nearest L=16: layer 14 done (1s)
+09:55:31   fit nearest L=16: layer 15 done (1s)
+09:56:06 lut:nearest:16:down@4-15+seq alpha_sample=0.204 alpha_greedy=0.301 KL=3.136 nll=5.717 | gamma=5: 0.43 tok/round alpha_hat=0.299 hist=[364, 104, 27, 10, 5, 2] | read 1556 MB (+525 head) fit 99s eval 34s
+09:56:06 == lut:hash:8:down@4-15+seq
+09:56:12   fit hash L=8: layer 4 done (1s)
+09:56:20   fit hash L=8: layer 5 done (1s)
+09:56:27   fit hash L=8: layer 6 done (1s)
+09:56:35   fit hash L=8: layer 7 done (1s)
+09:56:43   fit hash L=8: layer 8 done (1s)
+09:56:52   fit hash L=8: layer 9 done (1s)
+09:57:02   fit hash L=8: layer 10 done (1s)
+09:57:11   fit hash L=8: layer 11 done (1s)
+09:57:22   fit hash L=8: layer 12 done (1s)
+09:57:32   fit hash L=8: layer 13 done (1s)
+09:57:44   fit hash L=8: layer 14 done (1s)
+09:57:55   fit hash L=8: layer 15 done (1s)
+09:58:34 lut:hash:8:down@4-15+seq alpha_sample=0.025 alpha_greedy=0.001 KL=8.133 nll=10.699 | gamma=5: 0.00 tok/round alpha_hat=0.000 hist=[512, 0, 0, 0, 0, 0] | read 1569 MB (+525 head) fit 109s eval 39s
+09:58:34 done

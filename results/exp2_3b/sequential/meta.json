@@ -1,0 +1,34 @@
+{
+  "drafter": "meta-llama/Llama-3.2-1B",
+  "target": "meta-llama/Llama-3.2-3B",
+  "configs": [
+    "lut:nearest:8:down@4-15",
+    "lut:nearest:8:attn@4-15",
+    "lut:nearest:8:all@4-15",
+    "lut:nearest:8:down@2-15",
+    "lut:nearest:16:down@4-15",
+    "lut:hash:8:down@4-15"
+  ],
+  "cal_tokens": 100000,
+  "cal_rows": 16384,
+  "eval_tokens": 16384,
+  "seq_len": 512,
+  "batch": 2,
+  "gamma": 5,
+  "rounds": 512,
+  "round_batch": 16,
+  "lam": 3.0,
+  "sequential": true,
+  "dtype": "bfloat16",
+  "out": "results/exp2c",
+  "seed": 0,
+  "device": "cuda",
+  "configs_done": [
+    "lut:nearest:8:down@4-15+seq",
+    "lut:nearest:8:attn@4-15+seq",
+    "lut:nearest:8:all@4-15+seq",
+    "lut:nearest:8:down@2-15+seq",
+    "lut:nearest:16:down@4-15+seq",
+    "lut:hash:8:down@4-15+seq"
+  ]
+}

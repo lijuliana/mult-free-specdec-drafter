@@ -263,14 +263,25 @@ class LUTLayer:
         codes = self.enc.encode(x2)  # [N, C]
         C, Kk, m = self.q.shape
         flat_idx = codes + torch.arange(C, device=x.device).unsqueeze(0) * Kk  # [N, C]
-        table = self.q.reshape(C * Kk, m)
-        # gather-and-sum of 8-bit entries; done in int32 so the sum is exact
-        try:
-            acc = F.embedding_bag(flat_idx, table.to(torch.int32).float(), mode="sum")
-        except Exception:
-            acc = torch.zeros(x2.shape[0], m, device=x.device)
-            for c in range(C):
-                acc += table[c * Kk + codes[:, c]].float()
+        table = self.q.reshape(C * Kk, m).float()
+        # Gather-and-sum of 8-bit entries. Sums stay below 2^24 so float32 is exact (TF32 must be
+        # off). For many rows a one-hot matmul is ~70x faster than embedding_bag on CUDA; for a few
+        # rows (decoding) embedding_bag is fine.
+        N = x2.shape[0]
+        if N >= 32:
+            acc = torch.empty(N, m, device=x.device)
+            step = 4096
+            for s in range(0, N, step):
+                f = flat_idx[s : s + step]
+                onehot = torch.zeros(f.shape[0], C * Kk, device=x.device).scatter_(1, f, 1.0)
+                acc[s : s + step] = onehot @ table
+        else:
+            try:
+                acc = F.embedding_bag(flat_idx, table, mode="sum")
+            except Exception:
+                acc = torch.zeros(N, m, device=x.device)
+                for c in range(C):
+                    acc += table[c * Kk + codes[:, c]]
         y = acc * self.col_scale + self.offset.sum(0)
         if self.bias is not None:
             y = y + self.bias
@@ -304,17 +315,19 @@ def ridge_tables(codes: torch.Tensor, Y: torch.Tensor, C: int, lam: float = 1.0,
     """Solve min_T || onehot(codes) T - Y ||^2 + lam' ||T - T0||^2 for T [C*K, m], with
     lam' = lam * N / K so that lam is relative to the typical number of rows per table entry
     (lam = 1 weights the prior like one extra bucket's worth of rows). T0 is the prior table
-    (plain prototype dot products); None means shrink toward zero. CPU, float32."""
+    (plain prototype dot products); None means shrink toward zero. Float32, on the device of
+    `codes` (CPU on the laptop, GPU in the cloud)."""
     N = codes.shape[0]
     D = C * K
-    flat = (codes + torch.arange(C, device=codes.device).unsqueeze(0) * K).cpu()  # [N, C]
-    Y = Y.cpu().float()
-    XtX = torch.zeros(D, D)
-    XtY = torch.zeros(D, Y.shape[1])
+    dev = codes.device
+    flat = codes + torch.arange(C, device=dev).unsqueeze(0) * K  # [N, C]
+    Y = Y.to(dev).float()
+    XtX = torch.zeros(D, D, device=dev)
+    XtY = torch.zeros(D, Y.shape[1], device=dev)
     chunk = 2048
     for s in range(0, N, chunk):
         f = flat[s : s + chunk]
-        X = torch.zeros(f.shape[0], D)
+        X = torch.zeros(f.shape[0], D, device=dev)
         X.scatter_(1, f, 1.0)
         XtX.addmm_(X.T, X)
         XtY.addmm_(X.T, Y[s : s + chunk])
@@ -322,7 +335,7 @@ def ridge_tables(codes: torch.Tensor, Y: torch.Tensor, C: int, lam: float = 1.0,
     reg = lam * N / K
     XtX.diagonal().add_(reg)
     if T0 is not None:
-        XtY += reg * T0.cpu().float()
+        XtY += reg * T0.to(dev).float()
     T = torch.linalg.solve(XtX, XtY)
     del XtX
     return T
