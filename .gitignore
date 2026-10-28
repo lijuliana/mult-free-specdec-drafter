@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+results/*.pt
+figures/*.aux
+figures/*.log
+figures/*.fls
+figures/*.fdb_latexmk
+.DS_Store
