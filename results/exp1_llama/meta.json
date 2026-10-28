@@ -1,0 +1,35 @@
+{
+  "model": "meta-llama/Llama-3.2-1B",
+  "layer": 8,
+  "targets": [
+    "mlp.down_proj",
+    "self_attn.o_proj"
+  ],
+  "Ls": [
+    8,
+    16,
+    32
+  ],
+  "encoders": [
+    "nearest",
+    "tree",
+    "hash"
+  ],
+  "smooth": [
+    0
+  ],
+  "no_ridge_ablation": false,
+  "cal_tokens": 119808,
+  "cal_rows": 30000,
+  "eval_tokens": 8192,
+  "seq_len": 512,
+  "batch": 2,
+  "device": "cpu",
+  "dtype": "float32",
+  "out": "results/exp1_llama",
+  "seed": 0,
+  "lam": 3.0,
+  "max_rss_gb": 10.5,
+  "threads": 4,
+  "nll_exact": 3.0348622719602343
+}

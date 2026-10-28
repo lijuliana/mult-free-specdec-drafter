@@ -1,0 +1,42 @@
+device=cpu dtype=torch.float32
+W1028 00:37:55.757000 32210 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:   1%|          | 1/146 [00:02<05:19,  2.20s/it]Loading weights:  82%|████████▏ | 120/146 [00:02<00:00, 70.51it/s]Loading weights: 100%|██████████| 146/146 [00:02<00:00, 54.34it/s]
+'The read operation timed out' thrown while requesting GET https://huggingface.co/datasets/Salesforce/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext-103-raw-v1/train-00000-of-00002.parquet
+Retrying in 1s [Retry 1/5].
+'[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010)' thrown while requesting GET https://huggingface.co/datasets/Salesforce/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext-103-raw-v1/test-00000-of-00001.parquet
+Retrying in 1s [Retry 1/5].
+'The read operation timed out' thrown while requesting GET https://huggingface.co/datasets/Salesforce/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext-103-raw-v1/test-00000-of-00001.parquet
+Retrying in 2s [Retry 2/5].
+calibration 119808 tokens, eval 8192 tokens (310s)
+exact nll 3.0349 (ppl 20.80)
+
+== layer 8 mlp.down_proj: d=8192 m=2048
+collected 29952 calibration rows, 8192 eval rows
+int8  enc=-        L=  - smooth=0 ridge=0 rel_err=0.0124 KL=0.00003 top1=0.9972 nll=3.0346 fit=0s
+int4  enc=-        L=  - smooth=0 ridge=0 rel_err=0.1341 KL=0.00288 top1=0.9708 nll=3.0392 fit=0s
+lut   enc=nearest  L=  8 smooth=0 ridge=1 rel_err=0.5993 KL=0.06168 top1=0.8680 nll=3.0878 fit=43s
+lut   enc=tree     L=  8 smooth=0 ridge=1 rel_err=0.6535 KL=0.08170 top1=0.8476 nll=3.1060 fit=127s
+lut   enc=hash     L=  8 smooth=0 ridge=1 rel_err=0.7004 KL=0.10352 top1=0.8319 nll=3.1241 fit=12s
+lut   enc=nearest  L= 16 smooth=0 ridge=1 rel_err=0.6828 KL=0.08318 top1=0.8443 nll=3.1059 fit=20s
+lut   enc=tree     L= 16 smooth=0 ridge=1 rel_err=0.7268 KL=0.10199 top1=0.8330 nll=3.1264 fit=215s
+lut   enc=hash     L= 16 smooth=0 ridge=1 rel_err=0.7689 KL=0.12429 top1=0.8185 nll=3.1468 fit=4s
+lut   enc=nearest  L= 32 smooth=0 ridge=1 rel_err=0.7527 KL=0.10358 top1=0.8278 nll=3.1266 fit=9s
+lut   enc=tree     L= 32 smooth=0 ridge=1 rel_err=0.7936 KL=0.12142 top1=0.8168 nll=3.1419 fit=427s
+lut   enc=hash     L= 32 smooth=0 ridge=1 rel_err=0.8253 KL=0.14478 top1=0.8022 nll=3.1666 fit=2s
+
+== layer 8 self_attn.o_proj: d=2048 m=2048
+collected 29952 calibration rows, 8192 eval rows
+int8  enc=-        L=  - smooth=0 ridge=0 rel_err=0.0145 KL=0.00002 top1=0.9980 nll=3.0346 fit=0s
+int4  enc=-        L=  - smooth=0 ridge=0 rel_err=0.1754 KL=0.00220 top1=0.9738 nll=3.0370 fit=0s
+lut   enc=nearest  L=  8 smooth=0 ridge=1 rel_err=0.6061 KL=0.03577 top1=0.8979 nll=3.0712 fit=8s
+lut   enc=tree     L=  8 smooth=0 ridge=1 rel_err=0.6029 KL=0.03940 top1=0.8921 nll=3.0762 fit=29s
+lut   enc=hash     L=  8 smooth=0 ridge=1 rel_err=0.6447 KL=0.05799 top1=0.8744 nll=3.1147 fit=1s
+lut   enc=nearest  L= 16 smooth=0 ridge=1 rel_err=0.6474 KL=0.04690 top1=0.8814 nll=3.0818 fit=4s
+lut   enc=tree     L= 16 smooth=0 ridge=1 rel_err=0.6523 KL=0.05468 top1=0.8744 nll=3.1014 fit=55s
+lut   enc=hash     L= 16 smooth=0 ridge=1 rel_err=0.6798 KL=0.07765 top1=0.8617 nll=3.1413 fit=1s
+lut   enc=nearest  L= 32 smooth=0 ridge=1 rel_err=0.6779 KL=0.05884 top1=0.8721 nll=3.0962 fit=2s
+lut   enc=tree     L= 32 smooth=0 ridge=1 rel_err=0.6908 KL=0.06785 top1=0.8608 nll=3.1130 fit=107s
+lut   enc=hash     L= 32 smooth=0 ridge=1 rel_err=0.7133 KL=0.09488 top1=0.8449 nll=3.1632 fit=0s
+
+wrote results/exp1_llama/results.csv
+exit 0

@@ -1,0 +1,15 @@
+device=cpu dtype=torch.float32
+W1027 22:38:43.891000 21439 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:   1%|          | 1/146 [00:03<07:30,  3.11s/it]Loading weights:  95%|█████████▍| 138/146 [00:03<00:00, 57.46it/s]Loading weights: 100%|██████████| 146/146 [00:03<00:00, 43.48it/s]
+calibration 119808 tokens, eval 8192 tokens (16s)
+exact nll 3.0349 (ppl 20.80)
+
+== layer 8 mlp.down_proj: d=8192 m=2048
+collected 49959 calibration rows, 8192 eval rows
+int8  enc=-        L=  - smooth=0 ridge=0 rel_err=0.0124 KL=0.00003 top1=0.9972 nll=3.0346 fit=0s
+int4  enc=-        L=  - smooth=0 ridge=0 rel_err=0.1341 KL=0.00288 top1=0.9708 nll=3.0392 fit=0s
+lut   enc=nearest  L=  8 smooth=0 ridge=1 rel_err=0.5948 KL=0.06143 top1=0.8659 nll=3.0888 fit=68s
+
+MEMORY GUARD: resident memory 8.3 GB exceeded 8.0 GB, aborting
+/Users/julianali/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
