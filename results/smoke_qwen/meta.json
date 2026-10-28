@@ -1,0 +1,34 @@
+{
+  "model": "Qwen/Qwen3-0.6B",
+  "layer": 14,
+  "targets": [
+    "mlp.down_proj",
+    "self_attn.o_proj"
+  ],
+  "Ls": [
+    8,
+    16
+  ],
+  "encoders": [
+    "nearest",
+    "tree",
+    "hash"
+  ],
+  "smooth": [
+    0
+  ],
+  "no_ridge_ablation": false,
+  "cal_tokens": 49664,
+  "cal_rows": 10000,
+  "eval_tokens": 2048,
+  "seq_len": 512,
+  "batch": 1,
+  "device": "cpu",
+  "dtype": "float32",
+  "out": "results/smoke_qwen",
+  "seed": 0,
+  "lam": 3.0,
+  "max_rss_gb": 6.0,
+  "threads": 4,
+  "nll_exact": 3.701598464159583
+}

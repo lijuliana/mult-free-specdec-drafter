@@ -1,0 +1,29 @@
+device=cpu dtype=torch.float32
+W1027 20:23:31.925000 8340 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:01<06:25,  1.24s/it]Loading weights:  71%|███████   | 221/311 [00:01<00:00, 225.27it/s]Loading weights: 100%|██████████| 311/311 [00:01<00:00, 183.05it/s]
+calibration 49664 tokens, eval 2048 tokens (15s)
+exact nll 3.7016 (ppl 40.51)
+
+== layer 14 mlp.down_proj: d=3072 m=1024
+collected 9991 calibration rows, 2048 eval rows
+int8  enc=-        L=  - smooth=0 ridge=0 rel_err=0.0127 KL=0.00001 top1=0.9995 nll=3.7015 fit=0s
+int4  enc=-        L=  - smooth=0 ridge=0 rel_err=0.1422 KL=0.00106 top1=0.9819 nll=3.6981 fit=0s
+lut   enc=nearest  L=  8 smooth=0 ridge=1 rel_err=0.5844 KL=0.01707 top1=0.9315 nll=3.7084 fit=4s
+lut   enc=tree     L=  8 smooth=0 ridge=1 rel_err=0.6767 KL=0.02544 top1=0.9178 nll=3.7103 fit=13s
+lut   enc=hash     L=  8 smooth=0 ridge=1 rel_err=0.7155 KL=0.02763 top1=0.9178 nll=3.7127 fit=1s
+lut   enc=nearest  L= 16 smooth=0 ridge=1 rel_err=0.6745 KL=0.02417 top1=0.9134 nll=3.7111 fit=2s
+lut   enc=tree     L= 16 smooth=0 ridge=1 rel_err=0.7511 KL=0.03272 top1=0.9056 nll=3.7186 fit=25s
+lut   enc=hash     L= 16 smooth=0 ridge=1 rel_err=0.7817 KL=0.03404 top1=0.9056 nll=3.7199 fit=0s
+
+== layer 14 self_attn.o_proj: d=2048 m=1024
+collected 9991 calibration rows, 2048 eval rows
+int8  enc=-        L=  - smooth=0 ridge=0 rel_err=0.0107 KL=0.00001 top1=0.9990 nll=3.7014 fit=0s
+int4  enc=-        L=  - smooth=0 ridge=0 rel_err=0.1390 KL=0.00103 top1=0.9804 nll=3.7001 fit=0s
+lut   enc=nearest  L=  8 smooth=0 ridge=1 rel_err=0.5766 KL=0.01607 top1=0.9359 nll=3.7109 fit=3s
+lut   enc=tree     L=  8 smooth=0 ridge=1 rel_err=0.5875 KL=0.01709 top1=0.9354 nll=3.7135 fit=9s
+lut   enc=hash     L=  8 smooth=0 ridge=1 rel_err=0.6626 KL=0.02233 top1=0.9271 nll=3.7150 fit=0s
+lut   enc=nearest  L= 16 smooth=0 ridge=1 rel_err=0.6280 KL=0.02024 top1=0.9325 nll=3.7205 fit=2s
+lut   enc=tree     L= 16 smooth=0 ridge=1 rel_err=0.6417 KL=0.02309 top1=0.9203 nll=3.7189 fit=16s
+lut   enc=hash     L= 16 smooth=0 ridge=1 rel_err=0.7157 KL=0.02661 top1=0.9154 nll=3.7182 fit=0s
+
+wrote results/smoke_qwen/results.csv

@@ -1,0 +1,30 @@
+W1027 20:19:13.078000 7567 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<04:12,  1.23it/s]Loading weights:  70%|███████   | 219/311 [00:00<00:00, 325.14it/s]Loading weights: 100%|██████████| 311/311 [00:01<00:00, 261.23it/s]
+mlp.down_proj: d=3072 m=1024; cal rows 9991, eval rows 4000
+activation |x| per-channel max: median 3.42, max 49.64, top-8 channels hold 7.9% of max-energy
+rows: mean |x| 0.180, 99.9th pct 2.81
+int8 g=None: rel_err 0.0126
+int4 g=128: rel_err 0.1423
+int3 g=128: rel_err 0.3253
+int2 g=128: rel_err 0.8078
+
+-- plain prototype tables (bucket means dot W)
+nearest  L= 8 K= 16 smooth=0 ridge=0 8bit=1 lam=0.001: rel_err 0.6337  (codes used 100%, 4s)
+-- ridge toward the prototype tables, penalty relative to rows per entry
+nearest  L= 8 K= 16 smooth=0 ridge=1 8bit=1 lam=0.03: rel_err 0.6913  (codes used 100%, 7s)
+nearest  L= 8 K= 16 smooth=0 ridge=1 8bit=1 lam=0.3: rel_err 0.6017  (codes used 100%, 7s)
+nearest  L= 8 K= 16 smooth=0 ridge=1 8bit=1 lam=3: rel_err 0.5812  (codes used 100%, 7s)
+nearest  L= 8 K= 16 smooth=0 ridge=1 8bit=1 lam=30: rel_err 0.6088  (codes used 100%, 7s)
+-- same for the cheap encoders
+tree     L= 8 K= 16 smooth=0 ridge=0 8bit=1 lam=0.001: rel_err 0.7448  (codes used 89%, 14s)
+tree     L= 8 K= 16 smooth=0 ridge=1 8bit=1 lam=3: rel_err 0.6716  (codes used 89%, 17s)
+hash     L= 8 K= 16 smooth=0 ridge=0 8bit=1 lam=0.001: rel_err 0.8033  (codes used 100%, 0s)
+hash     L= 8 K= 16 smooth=0 ridge=1 8bit=1 lam=3: rel_err 0.7134  (codes used 100%, 4s)
+-- shorter subvectors (2x bytes per token, 2x storage)
+nearest  L= 4 K= 16 smooth=0 ridge=0 8bit=1 lam=0.001: rel_err 0.5012  (codes used 100%, 8s)
+nearest  L= 4 K= 16 smooth=0 ridge=1 8bit=1 lam=3: rel_err 0.4772  (codes used 100%, 18s)
+-- longer subvectors (half the bytes)
+nearest  L=16 K= 16 smooth=0 ridge=0 8bit=1 lam=0.001: rel_err 0.7330  (codes used 100%, 2s)
+nearest  L=16 K= 16 smooth=0 ridge=1 8bit=1 lam=3: rel_err 0.6699  (codes used 100%, 3s)
+-- 256 prototypes per subspace, prototype tables only (16x storage; resolution check)
+nearest  L= 8 K=256 smooth=0 ridge=0 8bit=1 lam=0.001: rel_err 0.4404  (codes used 98%, 30s)
