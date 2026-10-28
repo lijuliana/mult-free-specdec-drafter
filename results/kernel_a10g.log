@@ -1,0 +1,15 @@
+# python experiments/bench_kernel.py on AWS g5.xlarge, 2026-10-28
+NVIDIA A10G torch 2.7.0+cu128 triton 3.3.0
+hash-encode exact match: True (fp rounding at plane boundaries can differ)
+lut best tiles CH,BN = (128, 64) 9.6 us
+luth best tiles CH,BN = (128, 64) 10.3 us
+
+DOWN_PROJ 8192->2048, batch 1
+  dense bf16 cuBLAS :    77.8 us  (431 GB/s)
+  LUT lookup only   :     9.5 us  (221 GB/s)  speedup 8.2x
+  LUT + hash encode :    10.2 us  speedup 7.6x
+
+ALL 112 PROJECTIONS of Llama-3.2-1B, batch 1 (one draft token)
+  dense bf16        :  4369.6 us
+  LUT lookup only   :   756.8 us  speedup 5.8x
+  LUT + hash encode :   817.5 us  speedup 5.3x
