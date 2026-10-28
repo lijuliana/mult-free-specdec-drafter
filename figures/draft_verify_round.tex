@@ -22,7 +22,7 @@
   \end{scope}
   % verify and return
   \node[stage, below=16mm of add.south, anchor=north, text width=40mm] (ver) {\textbf{Target verifies}\\One exact pass over $\gamma+1$ tokens; output distribution unchanged};
-  \node[stage, text width=66mm, fill=black!4] (ret) at (ver -| enc.west) [anchor=west] {\textbf{Returned to the drafter}\\Accepted tokens, and hidden states from 5 target layers fused by one projection into the context feature $f_t$};
+  \node[stage, text width=66mm, fill=black!4] (ret) at (ver -| enc.west) [anchor=west] {\textbf{Returned to the drafter}\\Accepted tokens, and features from 5 target layers fused by one projection into the context feature $f_t$};
   \draw[flow] (drafter.south -| add) -- (ver.north) node[edgelabel, midway, right] {$\gamma$ draft tokens};
   \draw[flow] (ver.west) -- (ret.east);
   \draw[flow] (ret.north -| enc) -- (drafter.south -| enc) node[edgelabel, midway, left] {next round};
