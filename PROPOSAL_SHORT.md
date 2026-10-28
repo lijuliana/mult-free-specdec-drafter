@@ -4,7 +4,7 @@ CS 2420 Group 2 · Juliana Li, Eric Xu, Bowen Yang, Adam Zhou · October 2026 ·
 
 ## Summary
 
-Speculative decoding speeds up a large language model by having a cheap drafter guess several tokens that the large model then checks in one pass. We propose a drafter whose linear layers do no multiplication at all: each layer is replaced by a precomputed lookup table, following the MADDNESS method of [Blalock and Guttag (2021)](https://arxiv.org/abs/2106.10860). The drafter is a smaller model from the same family as the target, for example Llama-3.2-1B drafting for Llama-3.1-8B, and at batch size 1 it reads 1/16 of the bytes of the same model in 16 bits. The one data-dependent step in a lookup drafter is choosing which table row to read. Our main claim is that choosing that row with help from the target model's own features, which are free after every verification, raises the fraction of accepted draft tokens compared with a plain hash at the same table size. The target still verifies every token, so output quality is unchanged.
+Speculative decoding speeds up a large language model by having a cheap drafter guess several tokens that the large model then checks in one pass. We propose a drafter whose linear layers do no multiplication at all: each layer is replaced by a precomputed lookup table, following the MADDNESS method of [Blalock and Guttag (2021)](https://arxiv.org/abs/2106.10860). The drafter is a smaller model from the same family as the target, for example Llama-3.2-1B drafting for Llama-3.1-8B, and at batch size 1 it reads 1/16 of the bytes of the same model in 16 bits. The one data-dependent step in a lookup drafter is choosing which table row to read. Our main claim is that choosing that row with help from the target model's own features, which are free after every verification, raises the fraction of accepted draft tokens compared with a plain hash at the same table size. The target still verifies every token, so output quality is unchanged. First measurements: a fused lookup kernel runs the drafter's projections 5.8× faster than BF16, and one table layer costs 2 points of acceptance, but tables in every layer collapse acceptance (see [Preliminary results](#preliminary-results)).
 
 ## Motivation
 
@@ -65,6 +65,16 @@ The byte advantage over a 4-bit drafter holds up to batch 4 at L = 8 and batch 1
 
 Risks: the encoder must be fused into each projection's gather-and-add kernel or it becomes hundreds of dependent launches; LLM activation outliers can waste the 16 prototypes, so per-channel scaling as in [SmoothQuant](https://arxiv.org/abs/2211.10438) is folded into the weights before the tables are built; and the fusion projection W_c must stay out of the per-draft-token path.
 
+## Preliminary results
+
+Experiments 1 and 2 and a first kernel benchmark have run, with Llama-3.2-3B as the target while Llama-3.1-8B access is pending. Details are in [PROPOSAL.md](PROPOSAL.md#preliminary-results) and [experiments/README.md](experiments/README.md).
+
+- **Tables are faster.** A fused Triton lookup kernel runs all 112 projections of Llama-3.2-1B in 0.76 ms against 4.4 ms for BF16 at batch 1 on an A10G (5.8×). Encoding inside the kernel adds about 8%.
+- **Row choice matters.** With one layer replaced, the nearest-centroid encoder lowers KL to the exact model from 0.104 to 0.062 relative to a random hash, as much as reading 4× more bytes.
+- **One table layer is cheap.** Replacing one MLP down-projection lowers acceptance from 0.74 to 0.72.
+- **Attention tolerates tables.** All 48 attention projections of layers 4–15 replaced keep acceptance at 0.43, against 0.06 for the MLP projections of the same layers.
+- **Errors compound through depth.** Tables in every projection bring acceptance to 0.03, and replacing layer 0 or 1 alone collapses the drafter, so the gates of experiments 1 and 2 fail. Guided row choice must cut per-layer error by a large factor, table fine-tuning moves up, and the operating point becomes a hybrid with tables on attention and 4-bit MLPs.
+
 ## Starter experiments
 
 The first three run on one 80 GB GPU and decide whether the project continues. Every result reports c, α and tokens per second together, as Ha et al. recommend.
@@ -75,7 +85,7 @@ The first three run on one 80 GB GPU and decide whether the project continues. E
 4. **Fused kernel (in parallel with 2 and 3).** One Triton kernel per projection that encodes, gathers and adds in 8 bits; time it against a BF16 matrix-vector product and a 4-bit kernel. Gate: at or below the 4-bit kernel at L = 8.
 5. **End-to-end speedup.** Drafter and target in one loop with CUDA graphs, against vanilla decoding, the 16-bit and 4-bit 1B drafters, Draft & Verify and LayerSkip.
 6. **Which target features.** Repeat experiment 3 with EAGLE's one layer, EAGLE-3's three and DFlash's five.
-7. **Table fine-tuning (if needed).** Fine-tune tables, prototypes and scorers through a straight-through estimator against the target's next-token distribution.
+7. **Table fine-tuning.** Fine-tune tables, prototypes and scorers through a straight-through estimator against the target's next-token distribution.
 
 ## Open questions
 

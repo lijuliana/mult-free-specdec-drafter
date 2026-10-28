@@ -10,6 +10,8 @@ The main claim is about accuracy. Assigning each activation to a prototype is th
 
 The first milestone is a curve of acceptance rate against number of codebooks for Llama-3.2-1B drafting for Llama-3.1-8B, once with naive hashing and once with target-feature conditioning. Draft latency is measured beside it. The accuracy claim does not depend on the latency result.
 
+First measurements (see [Preliminary results](#preliminary-results)): a fused lookup kernel runs the drafter's projections 5.8× faster than BF16 at batch 1, and one table layer costs 2 points of acceptance. Tables in every layer collapse acceptance, so guided row choice and table fine-tuning carry the method, with MLPs and the first two blocks kept at 4 bits.
+
 ## Motivation
 
 Draft cost is the lever that current drafters leave unused. Speculative decoding ([Leviathan et al., 2023](https://arxiv.org/abs/2211.17192); [Chen et al., 2023](https://arxiv.org/abs/2302.01318)) has a cheap drafter propose γ tokens, and the target checks them in one parallel pass. With acceptance rate α and drafter cost c per token (as a fraction of one target forward pass), the speedup per round is
@@ -141,6 +143,24 @@ Four things can break the model, and the first experiments are designed around t
 - **The fusion projection.** W_c is a dense 2048 × 20480 product. Computed once per round over the accepted positions it is one small matrix product per verification, and it must stay out of the per-draft-token path. If it is needed per draft step it becomes a table like the others.
 - **No reuse at verification.** A separate drafter keeps its own KV cache and the target runs all its layers from scratch, unlike early-exit self-drafters. The drafter earns its place on draft cost and acceptance alone.
 
+## Preliminary results
+
+Experiments 1 and 2 and a first pass of experiment 4 have run. Llama-3.1-8B access is still pending, so experiment 2 uses Llama-3.2-3B as the target. Tables use 16 centroids per chunk of L = 8 inputs unless stated. Code, full tables and plots are in [experiments/README.md](experiments/README.md).
+
+| Result | Measurement |
+| --- | --- |
+| A fused table kernel is faster than BF16 | All 112 projections of Llama-3.2-1B at batch 1 on an A10G: 0.76 ms against 4.4 ms (5.8×); one down-projection: 9.5 µs against 78 µs (8.2×) |
+| Row choice changes accuracy | KL to the exact model with one layer replaced, nearest centroid against hash: 0.062 against 0.104 (MLP down-projection), 0.036 against 0.058 (attention output) |
+| One table layer is cheap | α against the 3B target: 0.74 for the exact drafter, 0.72 with one MLP down-projection replaced |
+| Attention tolerates tables | All 48 attention projections of layers 4–15 replaced: α = 0.43; the 36 MLP projections of the same layers: α = 0.06 |
+| Errors compound through depth | Every projection replaced: α = 0.03; down-projections of layers 4–15: α = 0.09; 4-bit weights everywhere: α = 0.66 |
+
+**Speed.** A Triton kernel that gathers and adds one 8-bit table row per chunk turns the 16× byte reduction into a 5.8× speedup over cuBLAS BF16 across the drafter's projections, and computing the hash codes inside the same kernel adds about 8%. It reaches about half the memory bandwidth of the dense product, so tuning has room left. The measurement covers projections only, and the comparison against a 4-bit kernel that the experiment-4 gate asks for has not been run.
+
+**Accuracy.** Choosing the centroid well matters as the main claim needs: on a single layer, the nearest-centroid encoder improves on the hash about as much as reading 4× more bytes. The per-layer error itself is large. The best table at L = 8 costs about 20× the KL of 4-bit weights, so the experiment-1 gate fails, and a diagnostic on Qwen3-0.6B traces the error to representing each 8-number chunk by one of 16 centroids. Rounding entries to 8 bits adds no measurable error, and per-channel outlier scaling does not help. Across the whole drafter this error compounds far faster than it adds, so the experiment-2 gate fails as well. Layers 0 and 1, where Llama forms its very large activations, collapse the drafter even when replaced alone. Sequential calibration and stronger regularization did not help.
+
+**Consequences for the plan.** Target-guided row choice (experiment 3) has to cut per-layer error by a large factor, and table fine-tuning against the target's distribution (experiment 7) moves ahead of the end-to-end loop. The operating point becomes a hybrid drafter: tables on the attention projections of layers 2 and up, where α stays usable before any guidance, with 4-bit weights for the MLPs and the first two blocks.
+
 ## Further explorations
 
 The first group extends the method; the second uses the artifact to answer questions about the models.
@@ -171,7 +191,7 @@ The first three experiments run on one 80 GB GPU and decide whether the project 
 4. **Fused kernel microbenchmark (in parallel with 2 and 3).** Write one Triton kernel per projection that encodes, gathers the selected rows and adds them in 8 bits, at batch size 1 on shapes 2048 × 2048 and 2048 × 8192. Time it against a BF16 matrix-vector product and a Marlin 4-bit kernel; report bytes read and achieved bandwidth. Gate: per-projection time at or below the 4-bit kernel at L = 8.
 5. **End-to-end speedup.** Run drafter and target in one loop with CUDA graphs. Report c, α and tokens per second against vanilla decoding, the 16-bit and 4-bit Llama-3.2-1B drafters, and Draft & Verify and LayerSkip from their released code. EAGLE-3 and DFlash numbers on Llama-3.1-8B are quoted from their papers as the trained-drafter bar.
 6. **Which target features.** Repeat experiment 3 with EAGLE's second-to-top layer, EAGLE-3's three layers, and DFlash's five, at matched adapter size.
-7. **Table fine-tuning by distillation (if needed).** Fine-tune tables, prototypes and scorers through a straight-through estimator on 5M tokens against the target's next-token distribution and report the gain in α.
+7. **Table fine-tuning by distillation.** Fine-tune tables, prototypes and scorers through a straight-through estimator on 5M tokens against the target's next-token distribution and report the gain in α.
 
 ## Open questions
 
