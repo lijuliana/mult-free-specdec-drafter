@@ -1,0 +1,32 @@
+# python experiments/bench_drafter.py on AWS g5.xlarge (A10G), 2026-10-29, with MLP-only and attention-only table drafters
+NVIDIA A10G torch 2.7.0+cu128 triton 3.3.0
+target llama-3.2-3b, 16-bit: 16.154 ms/token
+target llama-3.1-8b, 16-bit: 34.945 ms/token
+drafter 16-bit: 6.547 ms/token
+drafter 4-bit, all projections: 3.453 ms/token
+drafter tables, all projections: 3.376 ms/token
+drafter tables on attention 2-15, 16-bit rest: 6.280 ms/token
+drafter tables on attention 2-15, 4-bit rest: 3.633 ms/token
+drafter tables on down 4-15 and attention 2-15, 4-bit rest: 3.566 ms/token
+drafter tables on MLP, 4-bit attention: 3.170 ms/token
+drafter tables on MLP 4-15, 4-bit rest: 3.238 ms/token
+drafter tables on attention, 4-bit MLP: 3.659 ms/token
+drafter 4-bit, all projections, 4-bit head: 2.636 ms/token
+drafter tables on MLP, 4-bit attention, 4-bit head: 2.353 ms/token
+drafter tables on attention 2-15, 4-bit rest, 4-bit head: 2.817 ms/token
+drafter tables, all projections, 4-bit head: 2.562 ms/token
+
+against Llama-3.2-3B, gamma = 5. 4-bit drafter at acceptance 0.66: 1.30x
+  16-bit                                                     c = 0.405; needs acceptance 0.83 to match it, speedup at its own acceptance 0.74: 1.06x
+  4-bit, all projections                                     c = 0.214; needs acceptance 0.66 to match it, speedup at its own acceptance 0.66: 1.30x
+  tables, all projections                                    c = 0.209; needs acceptance 0.65 to match it
+  tables on attention 2-15, 16-bit rest                      c = 0.389; needs acceptance 0.82 to match it
+  tables on attention 2-15, 4-bit rest                       c = 0.225; needs acceptance 0.67 to match it
+  tables on down 4-15 and attention 2-15, 4-bit rest         c = 0.221; needs acceptance 0.67 to match it
+  tables on MLP, 4-bit attention                             c = 0.196; needs acceptance 0.64 to match it
+  tables on MLP 4-15, 4-bit rest                             c = 0.200; needs acceptance 0.64 to match it
+  tables on attention, 4-bit MLP                             c = 0.226; needs acceptance 0.67 to match it
+  4-bit, all projections, 4-bit head                         c = 0.163; needs acceptance 0.60 to match it
+  tables on MLP, 4-bit attention, 4-bit head                 c = 0.146; needs acceptance 0.57 to match it
+  tables on attention 2-15, 4-bit rest, 4-bit head           c = 0.174; needs acceptance 0.61 to match it
+  tables, all projections, 4-bit head                        c = 0.159; needs acceptance 0.59 to match it

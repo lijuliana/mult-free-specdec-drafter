@@ -178,7 +178,12 @@ def main():
         "tables on attention 2-15, 4-bit rest": (lambda l, n: "lut" if (n in attn and l >= 2) else "int4", "bf16"),
         "tables on down 4-15 and attention 2-15, 4-bit rest":
             (lambda l, n: "lut" if ((n in attn and l >= 2) or (n == "down" and l >= 4)) else "int4", "bf16"),
+        "tables on MLP, 4-bit attention": (lambda l, n: "int4" if n in attn else "lut", "bf16"),
+        "tables on MLP 4-15, 4-bit rest": (lambda l, n: "lut" if (n not in attn and l >= 4) else "int4", "bf16"),
+        "tables on attention, 4-bit MLP": (lambda l, n: "lut" if n in attn else "int4", "bf16"),
         "4-bit, all projections, 4-bit head": (lambda l, n: "int4", "int4"),
+        "tables on MLP, 4-bit attention, 4-bit head": (lambda l, n: "int4" if n in attn else "lut", "int4"),
+        "tables on attention 2-15, 4-bit rest, 4-bit head": (lambda l, n: "lut" if (n in attn and l >= 2) else "int4", "int4"),
         "tables, all projections, 4-bit head": (lambda l, n: "lut", "int4"),
     }
     res = {}
@@ -205,7 +210,7 @@ def main():
         be = break_even(c, goal)
         tag = f"needs acceptance {be:.2f} to match it" if be else "cannot match it at any acceptance"
         extra = f", speedup at its own acceptance {measured[name]}: {speedup(measured[name], c):.2f}x" if name in measured else ""
-        print(f"  {name:55s} c = {c:.3f}; {tag}{extra}")
+        print(f"  {name:58s} c = {c:.3f}; {tag}{extra}")
 
 
 if __name__ == "__main__":
