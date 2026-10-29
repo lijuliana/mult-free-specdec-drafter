@@ -1,0 +1,30 @@
+/opt/pytorch/lib/python3.12/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 4445.25it/s]
+Loading weights:   0%|          | 0/254 [00:00<?, ?it/s]Loading weights: 100%|██████████| 254/254 [00:00<00:00, 4188.22it/s]
+21:25:10 calibration 199680, training 1999872, eval 16384, validation 2048 tokens
+21:25:28 == lut:nearest:8:all@8-15
+21:25:34   fit nearest L=8: layer 8 done (6s)
+21:25:40   fit nearest L=8: layer 9 done (12s)
+21:25:46   fit nearest L=8: layer 10 done (18s)
+21:25:52   fit nearest L=8: layer 11 done (24s)
+21:25:58   fit nearest L=8: layer 12 done (30s)
+21:26:04   fit nearest L=8: layer 13 done (36s)
+21:26:10   fit nearest L=8: layer 14 done (42s)
+21:26:16   fit nearest L=8: layer 15 done (48s)
+21:27:13   before: alpha=0.073 greedy=0.167 KL=5.342 tok/round=0.16
+21:27:13   training 56 tables, 973M entries
+21:27:14   step 0/1953 train KL 5.061 val KL 4.994 (2s)
+21:29:10   step 200/1953 train KL 4.547 val KL 5.788 (117s)
+21:31:06   step 400/1953 train KL 3.965 val KL 3.900 (233s)
+21:33:02   step 600/1953 train KL 3.920 val KL 4.006 (349s)
+21:34:57   step 800/1953 train KL 4.010 val KL 4.097 (464s)
+21:36:53   step 1000/1953 train KL 4.320 val KL 4.127 (580s)
+21:38:49   step 1200/1953 train KL 3.991 val KL 4.200 (696s)
+21:40:45   step 1400/1953 train KL 4.270 val KL 4.270 (812s)
+21:42:40   step 1600/1953 train KL 4.136 val KL 4.315 (927s)
+21:44:36   step 1800/1953 train KL 4.338 val KL 4.257 (1043s)
+21:46:04   step 1952/1953 train KL 4.117 val KL 4.257 (1131s)
+21:46:55   after:  alpha=0.155 greedy=0.157 KL=4.226 tok/round=0.15 (trained 1131s)
+21:46:55 done
+ALL_DONE

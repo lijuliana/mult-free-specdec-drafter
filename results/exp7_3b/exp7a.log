@@ -1,0 +1,62 @@
+/opt/pytorch/lib/python3.12/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 4831.99it/s]
+Loading weights:   0%|          | 0/254 [00:00<?, ?it/s]Loading weights: 100%|██████████| 254/254 [00:00<00:00, 4226.47it/s]
+20:53:18 calibration 199680, training 1999872, eval 16384, validation 2048 tokens
+20:53:41 == lut:nearest:8:attn@2-15
+20:53:47   fit nearest L=8: layer 2 done (6s)
+20:53:49   fit nearest L=8: layer 3 done (8s)
+20:53:51   fit nearest L=8: layer 4 done (10s)
+20:53:53   fit nearest L=8: layer 5 done (13s)
+20:53:55   fit nearest L=8: layer 6 done (15s)
+20:53:58   fit nearest L=8: layer 7 done (17s)
+20:54:00   fit nearest L=8: layer 8 done (19s)
+20:54:02   fit nearest L=8: layer 9 done (21s)
+20:54:04   fit nearest L=8: layer 10 done (23s)
+20:54:06   fit nearest L=8: layer 11 done (26s)
+20:54:08   fit nearest L=8: layer 12 done (28s)
+20:54:11   fit nearest L=8: layer 13 done (30s)
+20:54:13   fit nearest L=8: layer 14 done (32s)
+20:54:15   fit nearest L=8: layer 15 done (34s)
+20:54:59   before: alpha=0.346 greedy=0.362 KL=2.233 tok/round=0.58
+20:54:59   training 56 tables, 294M entries
+20:55:01   step 0/1953 train KL 2.066 val KL 2.068 (2s)
+20:56:22   step 200/1953 train KL 1.925 val KL 1.848 (84s)
+20:57:44   step 400/1953 train KL 1.990 val KL 1.939 (165s)
+20:59:05   step 600/1953 train KL 1.934 val KL 1.939 (247s)
+21:00:27   step 800/1953 train KL 2.022 val KL 1.977 (328s)
+21:01:49   step 1000/1953 train KL 2.044 val KL 1.871 (410s)
+21:03:10   step 1200/1953 train KL 1.623 val KL 1.773 (491s)
+21:04:32   step 1400/1953 train KL 2.002 val KL 1.715 (573s)
+21:05:53   step 1600/1953 train KL 1.802 val KL 1.681 (654s)
+21:07:15   step 1800/1953 train KL 2.056 val KL 1.660 (736s)
+21:08:17   step 1952/1953 train KL 1.605 val KL 1.644 (798s)
+21:08:58   after:  alpha=0.436 greedy=0.433 KL=1.726 tok/round=0.72 (trained 798s)
+21:08:58 == lut:nearest:8:down@4-15
+21:09:00   fit nearest L=8: layer 4 done (3s)
+21:09:03   fit nearest L=8: layer 5 done (5s)
+21:09:06   fit nearest L=8: layer 6 done (8s)
+21:09:08   fit nearest L=8: layer 7 done (10s)
+21:09:11   fit nearest L=8: layer 8 done (13s)
+21:09:13   fit nearest L=8: layer 9 done (16s)
+21:09:16   fit nearest L=8: layer 10 done (18s)
+21:09:19   fit nearest L=8: layer 11 done (21s)
+21:09:21   fit nearest L=8: layer 12 done (23s)
+21:09:24   fit nearest L=8: layer 13 done (26s)
+21:09:26   fit nearest L=8: layer 14 done (29s)
+21:09:29   fit nearest L=8: layer 15 done (31s)
+21:10:09   before: alpha=0.088 greedy=0.212 KL=4.604 tok/round=0.26
+21:10:09   training 12 tables, 403M entries
+21:10:10   step 0/1953 train KL 4.465 val KL 3.708 (1s)
+21:11:35   step 200/1953 train KL 2.332 val KL 2.337 (85s)
+21:12:59   step 400/1953 train KL 2.267 val KL 2.278 (169s)
+21:14:23   step 600/1953 train KL 1.936 val KL 2.030 (253s)
+21:15:47   step 800/1953 train KL 1.793 val KL 1.823 (337s)
+21:17:11   step 1000/1953 train KL 2.168 val KL 2.013 (422s)
+21:18:35   step 1200/1953 train KL 1.528 val KL 1.726 (506s)
+21:19:59   step 1400/1953 train KL 1.920 val KL 1.670 (590s)
+21:21:23   step 1600/1953 train KL 1.638 val KL 1.618 (674s)
+21:22:47   step 1800/1953 train KL 2.012 val KL 1.583 (758s)
+21:23:51   step 1952/1953 train KL 1.418 val KL 1.588 (822s)
+21:24:30   after:  alpha=0.373 greedy=0.430 KL=1.941 tok/round=0.72 (trained 822s)
+21:24:30 done
