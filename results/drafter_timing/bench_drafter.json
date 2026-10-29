@@ -1,0 +1,12 @@
+{
+  "llama-3.2-3b": 16.17165283203125,
+  "llama-3.1-8b": 34.95,
+  "16-bit": 6.5573272705078125,
+  "4-bit, all projections": 3.466117248535156,
+  "tables, all projections": 3.3942425537109373,
+  "tables on attention 2-15, 16-bit rest": 6.291814575195312,
+  "tables on attention 2-15, 4-bit rest": 3.647344055175781,
+  "tables on down 4-15 and attention 2-15, 4-bit rest": 3.5807949829101564,
+  "4-bit, all projections, 4-bit head": 2.64890380859375,
+  "tables, all projections, 4-bit head": 2.5797940063476563
+}
