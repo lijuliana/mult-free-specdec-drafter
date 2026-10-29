@@ -27,6 +27,15 @@ use 16 centroids per chunk of 8 inputs. Acceptance is the per-token acceptance r
 | Tables on MLP down-projections, layers 4–15, rest exact; tables, centroids and row choice trained | 0.45 | |
 | Same, with the target's features guiding the row choice | no gain over the same training without them | |
 
+Tables on part of the drafter, with 4-bit weights everywhere else (timing) and acceptance from the
+best training without and with the target's features:
+
+| Tables on | ms per draft token | Acceptance needed to match 4-bit | Best acceptance, no features | With features (same training without them) |
+| --- | --- | --- | --- | --- |
+| Attention, layers 2–15 | 3.63 | 0.67 | 0.44 | 0.42 (0.43) |
+| MLP down-projections, layers 4–15 | about 3.38 | about 0.65 | 0.45 | 0.35 (0.36) |
+| All MLP projections, layers 4–15 | 3.24 | 0.64 | 0.06, untrained | not run |
+
 What we know:
 
 - **Speed.** Table projections are 5.8× faster than 16-bit ones, but a 4-bit drafter is nearly as fast,

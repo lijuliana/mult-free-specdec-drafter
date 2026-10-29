@@ -290,12 +290,35 @@ projections use PyTorch's tinygemm kernel (`torch._weight_int4pack_mm`, as in gp
 
 | Drafter, Llama-3.2-1B on an A10G | ms per token | Acceptance needed to match the 4-bit drafter |
 | --- | --- | --- |
-| 16-bit | 6.56 | 0.83 |
-| 4-bit weights | 3.47 | 0.66 (measured) |
-| Tables in every projection | 3.39 | 0.65 |
-| Tables on attention 2–15, 4-bit elsewhere | 3.65 | 0.67 |
-| 4-bit weights, 4-bit output head | 2.65 | 0.60 |
-| Tables in every projection, 4-bit output head | 2.58 | 0.59 |
+| 16-bit | 6.55 | 0.83 |
+| 4-bit weights | 3.45 | 0.66 (measured) |
+| Tables in every projection | 3.38 | 0.65 |
+| Tables on attention (all layers), 4-bit MLP | 3.66 | 0.67 |
+| Tables on attention 2–15, 4-bit elsewhere | 3.63 | 0.67 |
+| Tables on MLP (all layers), 4-bit attention | 3.17 | 0.64 |
+| Tables on MLP 4–15, 4-bit elsewhere | 3.24 | 0.64 |
+| 4-bit weights, 4-bit output head | 2.64 | 0.60 |
+| Tables on attention 2–15, 4-bit elsewhere, 4-bit output head | 2.82 | 0.61 |
+| Tables on MLP, 4-bit attention, 4-bit output head | 2.35 | 0.57 |
+| Tables in every projection, 4-bit output head | 2.56 | 0.59 |
+
+Second run, `results/drafter_timing/timing_a10g_mlp_attn.log`; the first run (`timing_a10g.log`)
+agrees within 0.5%.
+
+**Speed against accuracy, attention and MLP tables.** Timing puts 4-bit weights on every projection
+without tables. The acceptance runs kept those projections exact, so with 4-bit weights there they
+would be a few points lower.
+
+| Tables on | ms per token | Needed to match 4-bit | Best acceptance without target features | Acceptance with target features | Same training without features |
+| --- | --- | --- | --- | --- | --- |
+| Attention, layers 2–15 | 3.63 | 0.67 | 0.44 (fine-tuned tables) | 0.42 | 0.43 |
+| MLP down-projections, layers 4–15 | about 3.38 (estimated) | about 0.65 | 0.45 (tables, centroids and row choice trained) | 0.35 | 0.36 |
+| All MLP projections, layers 4–15 | 3.24 | 0.64 | 0.06 (untrained) | not run | not run |
+
+The down-projection-only drafter was not timed; its estimate subtracts 12 × (20.4 − 14.1) µs from the
+4-bit drafter. The context path of the guided encoder (fusion projection per round, adapter and scorer
+per projection) is not included in any timing. Attention tables are the more accurate but make the
+drafter slower than 4-bit; MLP tables make it faster but are the least accurate before training.
 
 The 3B target takes 16.2 ms per token and the 8B target 35.0 ms. Break-even uses the speedup formula
 with γ = 5, against the 4-bit drafter at its measured acceptance of 0.66 (1.30×).
