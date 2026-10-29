@@ -233,7 +233,9 @@ Acceptance per token against Llama-3.2-3B (teacher-forced E[min(p, q)]):
 | First `guided` run (broken optimization) | 0.31 | 0.18 |
 
 Fine-tuning tables in every projection of layers 8–15 (Adafactor, to fit in 24 GB) raised acceptance
-from 0.07 to 0.16. The exact drafter is at 0.74, and 4-bit weights everywhere at 0.66.
+from 0.07 to 0.16. Training tables, centroids and row choice together (`joint`, 2M tokens, 8-bit Adam
+on an L40S, `results/exp3_3b/all_tables/`) raised tables in every projection from 0.03 to 0.30, and
+tables in every projection of layers 2–15 (layers 0–1 exact) from 0.06 to 0.33. The exact drafter is at 0.74, and 4-bit weights everywhere at 0.66.
 
 - **Training rescues much of the compounding.** The down-projection set goes from 0.09 to 0.45 when
   tables, centroids and row choice train together. Tables in every projection remain far off.
@@ -303,7 +305,9 @@ projections use PyTorch's tinygemm kernel (`torch._weight_int4pack_mm`, as in gp
 | Tables in every projection, 4-bit output head | 2.56 | 0.59 |
 
 Second run, `results/drafter_timing/timing_a10g_mlp_attn.log`; the first run (`timing_a10g.log`)
-agrees within 0.5%.
+agrees within 0.5%. On an L40S (`timing_l40s.log`) everything is about 1.5× faster and the ordering is
+the same, except that tables in every projection are 2% slower than 4-bit (2.37 against 2.33 ms);
+tables in layers 2–15 with 4-bit layers 0–1 take 2.37 ms, and the 3B target 10.5 ms.
 
 **Speed against accuracy, attention and MLP tables.** Timing puts 4-bit weights on every projection
 without tables. The acceptance runs kept those projections exact, so with 4-bit weights there they

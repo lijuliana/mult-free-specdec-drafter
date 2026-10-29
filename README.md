@@ -25,6 +25,7 @@ tables run at 4 bits. In the acceptance runs, projections without tables stayed 
 | Exact 16-bit | 6.55 | 0.83 | 0.74 | | 1.06× |
 | 4-bit weights everywhere | 3.45 | 0.66 | 0.66 | | 1.30× |
 | Tables everywhere | 3.38 | 0.65 | 0.30 trained (0.03 untrained) | | 0.69× |
+| Tables in layers 2–15, layers 0–1 exact | about 3.38 (estimated) | about 0.65 | 0.33 trained (0.06 untrained) | | 0.72× |
 | Tables on attention, layers 2–15 | 3.63 | 0.67 | 0.44 | 0.42 (0.43) | 0.83× |
 | Tables on MLP down-projections, layers 4–15 | about 3.38 (estimated) | about 0.65 | 0.45 | 0.35 (0.36) | 0.88× |
 | Tables on all MLP projections, layers 4–15 | 3.24 | 0.64 | 0.06 untrained | not run | 0.53× |
@@ -33,6 +34,9 @@ Overall speedup is decoding speed relative to the 3B target alone (16.2 ms per t
 (1 − α^(γ+1)) / ((1 − α)(γc + 1)) with γ = 5 drafted tokens per round, α the best acceptance without
 target features and c the drafter's time per token divided by the target's. Below 1× the drafter slows
 decoding down. Trained tables use a learned scoring term whose small encoding cost is not in the timing.
+"Trained" means table entries, centroids and row choice trained together against the target on 2M tokens.
+The layers 2–15 timing is estimated from an L40S run, where it equals tables everywhere (2.37 ms against
+2.33 ms for 4-bit); there, 4-bit layers 0–1 were timed, while the acceptance run kept them exact.
 
 What we know:
 
