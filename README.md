@@ -13,20 +13,38 @@ so output quality is unchanged.
 - [PROPOSAL.md](PROPOSAL.md): the full proposal, with the cost model, related work and references.
 - [experiments/README.md](experiments/README.md): how each experiment is run, and its full results.
 
-## Results so far
+## Status
 
-Llama-3.2-1B drafter, Llama-3.2-3B target, WikiText-103. Tables use 16 centroids per chunk of 8 inputs.
+Llama-3.2-1B drafter, Llama-3.2-3B target (Llama-3.1-8B access pending), WikiText-103, one A10G. Tables
+use 16 centroids per chunk of 8 inputs. Acceptance is the per-token acceptance rate against the target.
 
-| Result | Measurement |
-| --- | --- |
-| Fused table kernel against BF16, all 112 projections, batch 1, A10G | 0.76 ms against 4.4 ms (5.8×) |
-| Acceptance, exact drafter / one MLP layer as tables | 0.74 / 0.72 |
-| Acceptance, attention projections of layers 4–15 as tables | 0.43 |
-| Acceptance, every projection as tables | 0.03 |
+| Drafter | Acceptance | ms per draft token |
+| --- | --- | --- |
+| Exact 16-bit | 0.74 | 6.56 |
+| 4-bit weights | 0.66 | 3.47 |
+| Tables in every projection | 0.03 | 3.39 |
+| Tables on attention, layers 2–15, rest exact; fine-tuned | 0.44 | |
+| Tables on MLP down-projections, layers 4–15, rest exact; tables, centroids and row choice trained | 0.45 | |
+| Same, with the target's features guiding the row choice | no gain over the same training without them | |
 
-Tables are fast and one layer is cheap, but the error compounds through depth. The next steps are
-target-guided row choice, table fine-tuning, and a hybrid drafter with tables on attention and 4-bit
-MLPs.
+What we know:
+
+- **Speed.** Table projections are 5.8× faster than 16-bit ones, but a 4-bit drafter is nearly as fast,
+  because attention, normalization, launch overhead and the output head dominate once weights are 4-bit.
+  A table drafter step is 2% faster than a 4-bit one today, and about 30% faster in the best case
+  (fused kernel, table output head).
+- **Accuracy.** One table layer costs 2 points of acceptance, but the error compounds: tables in every
+  projection collapse the drafter. Training the tables against the target recovers much of it for
+  partial sets (0.09 → 0.45 on 12 down-projections), not for whole layers.
+- **Target-guided row choice.** The first attempt made the drafter worse; the cause was an optimizer
+  scaling bug, now fixed. With stable training the target's features tie a row choice trained without
+  them. The main claim is not supported in this design.
+- **What it takes to beat 4-bit.** A table drafter needs about 0.64 acceptance (0.59 in the best speed
+  case) to match the 4-bit drafter's speedup at 0.66.
+
+Open directions: bandwidth-bound hardware (phones, CPUs) where table bytes dominate, a table output
+head, a 1–2 layer drafter fed by the target's features so errors compound through fewer layers, and
+feeding the features into the drafter continuously instead of only through the row choice.
 
 ## Layout
 
@@ -37,7 +55,10 @@ experiments/lut.py               table construction, encoders, ridge refit, tabl
 experiments/exp1_single_layer.py experiment 1: one projection replaced, KL and top-1
 experiments/diag_layer.py        experiment 1 diagnostic: sources of layer error
 experiments/exp2_acceptance.py   experiment 2: whole drafter, acceptance against the target
+experiments/exp7_finetune.py     experiment 7: train table entries against the target
+experiments/exp3_guided.py       experiment 3: row-choice variants, with and without target features
 experiments/bench_kernel.py      experiment 4: fused Triton table kernel against BF16
+experiments/bench_drafter.py     experiment 4: whole drafter step, 16-bit vs 4-bit vs tables
 experiments/plot_exp*.py         figures
 results/                         CSVs, logs and plots for every run
 ```

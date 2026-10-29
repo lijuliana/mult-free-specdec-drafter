@@ -7,8 +7,18 @@ Code and results for the starter experiments of [PROPOSAL.md](../PROPOSAL.md). R
 | --- | --- | --- |
 | 1. Single-layer reconstruction | Done (Llama-3.2-1B) | Best table at L = 8 costs about 20× the KL of 4-bit weights. Gate failed. |
 | 2. Acceptance under naive row choice | Done (1B drafting for 3B) | One table layer costs 2 points of acceptance; tables in every layer collapse the drafter. Gate failed. |
-| 4. Fused kernel | First pass done (A10G) | Lookup tables run all 112 projections 5.8× faster than BF16. |
-| 3, 5, 6, 7 | Not started | |
+| 7. Table fine-tuning | Done (partial sets) | Training rescues a lot: MLP down-projections of layers 4–15 go from 0.09 to 0.45 acceptance. |
+| 3. Target-guided row choice | Done (simplified) | Target features add nothing over an equally trained row choice without them (0.42 vs 0.43). |
+| 4. Fused kernel and drafter timing | Done (A10G) | Table projections are 5.8× faster than BF16, but a whole table drafter step is only 2% faster than a 4-bit one. |
+| 5, 6 | Not started | |
+
+**Where things stand.** Tables make each projection fast, but on a GPU a 4-bit drafter is already
+nearly as fast once attention, normalization, launch overhead and the output head are counted. A table
+drafter needs an acceptance of about 0.64 to beat the 4-bit drafter's 0.66. The best table drafters
+measured so far reach 0.45 with 12 of 112 projections replaced, and about 0.16 with all projections of
+layers 8–15. Feeding the target's features into the row choice did not help in this design. The
+remaining options are bandwidth-bound hardware (phones, CPUs), a table output head, and a much
+shallower drafter.
 
 ## Setup
 
@@ -170,7 +180,80 @@ Implications for the plan:
 Fitting all 112 projections takes about 2 minutes with the nearest encoder and 8 with the tree on an
 A10G. Evaluating one configuration takes 30 to 80 seconds.
 
-## Experiment 4: fused kernel (first pass)
+## Experiment 7: table fine-tuning
+
+`exp7_finetune.py` starts from the experiment-2 tables, makes every table entry a trainable float, and
+trains all of them jointly so the drafter's next-token distribution matches the 3B target's
+(KL(p_target || q_draft) on 2M WikiText-103 training tokens). The encoders stay fixed. A table layer has
+no gradient with respect to its input, so the backward pass uses the original weight matrix in its
+place (straight-through). Trained tables are rounded back to 8 bits and evaluated as in experiment 2.
+
+```
+python experiments/exp7_finetune.py --configs lut:nearest:8:attn@2-15 lut:nearest:8:down@4-15
+```
+
+## Experiment 3: target-guided row choice
+
+`exp3_guided.py` keeps the experiment-2 tables and changes how each chunk picks its row. Every variant
+scores the 16 rows of a chunk and takes the best one:
+
+- `recon`: the row whose stored answer is closest to the chunk's exact product. Uses only the input.
+- `learned`: nearest-centroid score plus a learned linear term in the chunk, trained end to end against
+  the target. The control: training without target features.
+- `guided`: `learned` plus a term from the target's features. Hidden states of 5 evenly spaced target
+  layers (as in DFlash) are normalized, concatenated and projected; a per-projection adapter maps the
+  result to 32 numbers, and a per-chunk matrix turns those into a score for each row. Position t sees
+  the target feature from position t − 1 (or t − 3), and draft rounds hold the feature of the last
+  verified token.
+- `joint`, `joint_guided`: as `learned` and `guided`, but centroids and table entries train too.
+- `warmstart`: trains `learned`, then continues on new data twice from the same state, once without and
+  once with the context term (which starts at zero). This is the clean test of the features.
+
+Training uses the hard choice in the forward pass and a softmax over the scores for the gradient
+(straight-through), 1M to 2M training tokens per run.
+
+```
+python experiments/exp3_guided.py --configs lut:nearest:8:attn@2-15 lut:nearest:8:down@4-15
+python experiments/exp3_guided.py --variants warmstart --train-tokens 2000000 --train-batch 1
+```
+
+### Results, experiments 7 and 3 (`results/exp7_3b/`, `results/exp3_3b/`)
+
+Acceptance per token against Llama-3.2-3B (teacher-forced E[min(p, q)]):
+
+| Method | Attention, layers 2–15 | Down-projection, layers 4–15 |
+| --- | --- | --- |
+| Tables, nearest centroid (experiment 2) | 0.35 | 0.09 |
+| `recon` row choice, untrained | 0.32 | 0.09 |
+| Fine-tuned tables (experiment 7) | 0.44 | 0.37 |
+| `learned` row choice, no target features | 0.43 | 0.36 |
+| `joint`: tables, centroids and row choice trained together | 0.41 | **0.45** |
+| `warmstart` control, no features | 0.43 | 0.36 |
+| `warmstart` with target features | 0.42 | 0.35 |
+| First `guided` run (broken optimization) | 0.31 | 0.18 |
+
+Fine-tuning tables in every projection of layers 8–15 (Adafactor, to fit in 24 GB) raised acceptance
+from 0.07 to 0.16. The exact drafter is at 0.74, and 4-bit weights everywhere at 0.66.
+
+- **Training rescues much of the compounding.** The down-projection set goes from 0.09 to 0.45 when
+  tables, centroids and row choice train together. Tables in every projection remain far off.
+- **A smarter untrained row choice does not help.** Picking the row that best matches each chunk's
+  exact product is slightly worse than the nearest centroid, because the ridge-fit tables are tuned
+  jointly across chunks.
+- **The first guided runs got worse than their own starting point** (validation KL 2.23 → 2.77 on
+  attention and 3.73 → 5.03 on down-projections within 200 steps), so the drop was an optimization
+  failure. Adam moves each weight by about the learning rate, so a unit summing n inputs moves about
+  n times faster: the adapter (1,024 inputs) and fusion projection (15,360 inputs) turned the
+  zero-initialized context term into a growing random bias. Warm starting at a 10× lower learning rate
+  did not fix it. A fixed random fusion projection, a unit-RMS context vector and an adapter learning
+  rate divided by its fan-in did: the context term then stays small (up to 11% of the base score) and
+  training is stable.
+- **With stable training, target features tie the control.** The likely limits are the design (the
+  chunk itself already determines its best row, and features enter only through a hard 16-way choice
+  with a biased straight-through gradient) and the training scale (about 1,000× less data than
+  DFlash, which feeds features continuously into every draft layer's keys and values).
+
+## Experiment 4: fused kernel and drafter timing
 
 `bench_kernel.py` times a Triton kernel that reads each chunk's 4-bit code, gathers that 8-bit table
 row and adds it into an int32 accumulator in one pass. A second version also computes the codes inside
@@ -197,6 +280,43 @@ python experiments/bench_kernel.py
   there is no 4-bit kernel comparison yet, which the proposal's gate asks for.
 - A PyTorch gather-and-sum on a laptop CPU, without a custom kernel, was 2× slower than BF16. The
   speedup needs the fused kernel.
+
+### Whole drafter step (`bench_drafter.py`, `results/drafter_timing/`)
+
+`bench_drafter.py` times one decode step of the whole 1B drafter at batch 1: RMSNorm, q/k/v, attention
+over a 512-token cache, output projection, MLP and output head, captured in one CUDA graph. Table
+projections use nearest-centroid encoding (a Triton kernel) and the fused gather-and-add. 4-bit
+projections use PyTorch's tinygemm kernel (`torch._weight_int4pack_mm`, as in gpt-fast).
+
+| Drafter, Llama-3.2-1B on an A10G | ms per token | Acceptance needed to match the 4-bit drafter |
+| --- | --- | --- |
+| 16-bit | 6.56 | 0.83 |
+| 4-bit weights | 3.47 | 0.66 (measured) |
+| Tables in every projection | 3.39 | 0.65 |
+| Tables on attention 2–15, 4-bit elsewhere | 3.65 | 0.67 |
+| 4-bit weights, 4-bit output head | 2.65 | 0.60 |
+| Tables in every projection, 4-bit output head | 2.58 | 0.59 |
+
+The 3B target takes 16.2 ms per token and the 8B target 35.0 ms. Break-even uses the speedup formula
+with γ = 5, against the 4-bit drafter at its measured acceptance of 0.66 (1.30×).
+
+| Per projection, µs | 16-bit | 4-bit | Tables |
+| --- | --- | --- | --- |
+| q, o (2048 → 2048) | 20.1 | 6.4 | 8.2 |
+| k, v (2048 → 512) | 6.2 | 3.5 | 7.1 |
+| gate, up (2048 → 8192) | 70.3 | 19.4 | 13.9 |
+| down (8192 → 2048) | 77.7 | 20.4 | 14.1 |
+| Output head (2048 → 128256) | 1084 | 269 | 93 |
+
+- **Everything except the projections costs 1.1 ms** (attention, normalization, launches), and the
+  16-bit output head another 1.1 ms. After 4-bit quantization the projections are a third of the step,
+  so reading 4× fewer bytes again saves little.
+- **Tables win on wide shapes and lose on narrow ones.** They beat 4-bit on the MLP projections and the
+  output head, and lose on the small attention projections, where launch latency dominates. Accuracy
+  favors tables on attention; speed favors them on the MLP and the head.
+- **Best case.** With a fused one-kernel table projection (about half the current time) and a table
+  output head, a table drafter step would take about 1.8 ms against 2.6 ms for a 4-bit drafter with a
+  4-bit head. It would still need an acceptance of about 0.59 to match the 4-bit drafter at 0.66.
 
 ## Implementation notes
 
