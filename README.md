@@ -20,14 +20,19 @@ use 16 centroids per chunk of 8 inputs, with 8-bit entries. Acceptance is the pe
 against the target. Timing is one decode step at batch 1 with a 16-bit output head; projections without
 tables run at 4 bits. In the acceptance runs, projections without tables stayed exact (16 bits).
 
-| Drafter | ms per draft token | Acceptance needed to match 4-bit | Acceptance, best without target features | Acceptance with target features (same training without them) |
-| --- | --- | --- | --- | --- |
-| Exact 16-bit | 6.55 | 0.83 | 0.74 | |
-| 4-bit weights everywhere | 3.45 | 0.66 | 0.66 | |
-| Tables everywhere | 3.38 | 0.65 | 0.03 untrained | |
-| Tables on attention, layers 2–15 | 3.63 | 0.67 | 0.44 | 0.42 (0.43) |
-| Tables on MLP down-projections, layers 4–15 | about 3.38 (estimated) | about 0.65 | 0.45 | 0.35 (0.36) |
-| Tables on all MLP projections, layers 4–15 | 3.24 | 0.64 | 0.06 untrained | not run |
+| Drafter | ms per draft token | Acceptance needed to match 4-bit | Acceptance, best without target features | Acceptance with target features (same training without them) | Overall speedup |
+| --- | --- | --- | --- | --- | --- |
+| Exact 16-bit | 6.55 | 0.83 | 0.74 | | 1.06× |
+| 4-bit weights everywhere | 3.45 | 0.66 | 0.66 | | 1.30× |
+| Tables everywhere | 3.38 | 0.65 | 0.30 trained (0.03 untrained) | | 0.69× |
+| Tables on attention, layers 2–15 | 3.63 | 0.67 | 0.44 | 0.42 (0.43) | 0.83× |
+| Tables on MLP down-projections, layers 4–15 | about 3.38 (estimated) | about 0.65 | 0.45 | 0.35 (0.36) | 0.88× |
+| Tables on all MLP projections, layers 4–15 | 3.24 | 0.64 | 0.06 untrained | not run | 0.53× |
+
+Overall speedup is decoding speed relative to the 3B target alone (16.2 ms per token), from
+(1 − α^(γ+1)) / ((1 − α)(γc + 1)) with γ = 5 drafted tokens per round, α the best acceptance without
+target features and c the drafter's time per token divided by the target's. Below 1× the drafter slows
+decoding down. Trained tables use a learned scoring term whose small encoding cost is not in the timing.
 
 What we know:
 
