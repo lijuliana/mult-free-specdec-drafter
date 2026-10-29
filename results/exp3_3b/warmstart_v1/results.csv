@@ -1,0 +1,3 @@
+config,variant,base,staleness,alpha_sample,alpha_greedy,kl,accepted_per_round,alpha_hat,train_seconds,n_params
+lut:nearest:8:attn@2-15,ws_learned_A,nearest,,0.43129446175233727,0.42600293542074363,1.6703067563051346,0.6875,0.411214953271028,575,26970880
+lut:nearest:8:attn@2-15,ws_learned_AB,nearest,,0.42838527358441436,0.42710371819960863,1.6844621572475844,0.73046875,0.4269406392694064,575,26970880

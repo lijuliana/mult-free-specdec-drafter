@@ -1,0 +1,57 @@
+/opt/pytorch/lib/python3.12/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 6567.16it/s]
+Loading weights:   0%|          | 0/254 [00:00<?, ?it/s]Loading weights: 100%|██████████| 254/254 [00:00<00:00, 4442.10it/s]
+00:25:41 target feature layers (hidden_states index): [2, 8, 14, 20, 26]
+00:26:30 == lut:nearest:8:attn@2-15
+00:26:37   fit nearest L=8: layer 2 done (7s)
+00:26:39   fit nearest L=8: layer 3 done (9s)
+00:26:41   fit nearest L=8: layer 4 done (11s)
+00:26:43   fit nearest L=8: layer 5 done (13s)
+00:26:46   fit nearest L=8: layer 6 done (15s)
+00:26:48   fit nearest L=8: layer 7 done (17s)
+00:26:50   fit nearest L=8: layer 8 done (19s)
+00:26:52   fit nearest L=8: layer 9 done (22s)
+00:26:54   fit nearest L=8: layer 10 done (24s)
+00:26:56   fit nearest L=8: layer 11 done (26s)
+00:26:59   fit nearest L=8: layer 12 done (28s)
+00:27:01   fit nearest L=8: layer 13 done (30s)
+00:27:03   fit nearest L=8: layer 14 done (32s)
+00:27:05   fit nearest L=8: layer 15 done (34s)
+00:27:06   warmstart phase A: learned row choice, no context
+00:27:08   step 0/1953 train KL 2.148 val KL 2.233 (2s)
+00:28:06   step 200/1953 train KL 1.646 val KL 1.602 (60s)
+00:29:05   step 400/1953 train KL 1.555 val KL 1.591 (119s)
+00:30:04   step 600/1953 train KL 1.689 val KL 1.591 (178s)
+00:31:03   step 800/1953 train KL 1.727 val KL 1.612 (237s)
+00:32:01   step 1000/1953 train KL 1.650 val KL 1.612 (295s)
+00:33:00   step 1200/1953 train KL 1.647 val KL 1.618 (354s)
+00:33:59   step 1400/1953 train KL 1.906 val KL 1.639 (413s)
+00:34:58   step 1600/1953 train KL 1.800 val KL 1.650 (471s)
+00:35:56   step 1800/1953 train KL 1.616 val KL 1.647 (530s)
+00:36:41   step 1952/1953 train KL 1.596 val KL 1.624 (575s)
+00:37:26   ws_learned_A   s=1: alpha=0.431 greedy=0.426 KL=1.670 tok/round=0.6875
+00:37:26   warmstart phase B control: continue without context
+00:37:27   step 0/1953 train KL 1.670 val KL 1.636 (1s)
+00:38:26   step 200/1953 train KL 1.721 val KL 1.639 (60s)
+00:39:25   step 400/1953 train KL 1.850 val KL 1.627 (119s)
+00:40:23   step 600/1953 train KL 1.678 val KL 1.656 (177s)
+00:41:22   step 800/1953 train KL 1.617 val KL 1.644 (236s)
+00:42:21   step 1000/1953 train KL 1.752 val KL 1.645 (295s)
+00:43:20   step 1200/1953 train KL 1.872 val KL 1.644 (354s)
+00:44:18   step 1400/1953 train KL 1.913 val KL 1.642 (412s)
+00:45:17   step 1600/1953 train KL 1.523 val KL 1.639 (471s)
+00:46:16   step 1800/1953 train KL 1.562 val KL 1.632 (530s)
+00:47:01   step 1952/1953 train KL 1.692 val KL 1.634 (575s)
+00:47:44   ws_learned_AB  s=1: alpha=0.428 greedy=0.427 KL=1.684 tok/round=0.73046875
+00:47:44   warmstart phase B guided: continue with context
+00:47:47   step 0/1953 train KL 1.670 val KL 1.629 (2s)
+00:48:52   step 200/1953 train KL 1.910 val KL 1.820 (68s)
+00:49:57   step 400/1953 train KL 2.078 val KL 2.253 (133s)
+00:51:03   step 600/1953 train KL 2.266 val KL 2.421 (198s)
+00:52:08   step 800/1953 train KL 2.340 val KL 2.378 (264s)
+00:53:13   step 1000/1953 train KL 2.489 val KL 2.368 (329s)
+00:54:19   step 1200/1953 train KL 2.615 val KL 2.349 (394s)
+00:55:24   step 1400/1953 train KL 2.527 val KL 2.339 (460s)
+00:56:29   step 1600/1953 train KL 2.319 val KL 2.368 (525s)
+00:57:35   step 1800/1953 train KL 2.144 val KL 2.340 (590s)

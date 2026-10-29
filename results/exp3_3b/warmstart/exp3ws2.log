@@ -1,0 +1,115 @@
+/opt/pytorch/lib/python3.12/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 4779.83it/s]
+Loading weights:   0%|          | 0/254 [00:00<?, ?it/s]Loading weights: 100%|██████████| 254/254 [00:00<00:00, 4040.59it/s]
+00:57:49 target feature layers (hidden_states index): [2, 8, 14, 20, 26]
+00:58:36 == lut:nearest:8:attn@2-15
+00:58:38   fit nearest L=8: layer 2 done (2s)
+00:58:41   fit nearest L=8: layer 3 done (4s)
+00:58:43   fit nearest L=8: layer 4 done (7s)
+00:58:45   fit nearest L=8: layer 5 done (9s)
+00:58:47   fit nearest L=8: layer 6 done (11s)
+00:58:49   fit nearest L=8: layer 7 done (13s)
+00:58:51   fit nearest L=8: layer 8 done (15s)
+00:58:53   fit nearest L=8: layer 9 done (17s)
+00:58:56   fit nearest L=8: layer 10 done (19s)
+00:58:58   fit nearest L=8: layer 11 done (22s)
+00:59:00   fit nearest L=8: layer 12 done (24s)
+00:59:02   fit nearest L=8: layer 13 done (26s)
+00:59:04   fit nearest L=8: layer 14 done (28s)
+00:59:06   fit nearest L=8: layer 15 done (30s)
+00:59:07   warmstart phase A: learned row choice, no context
+00:59:08   step 0/1953 train KL 2.159 val KL 2.230 context/base 0.000 (1s)
+01:00:07   step 200/1953 train KL 1.646 val KL 1.611 context/base 0.000 (60s)
+01:01:05   step 400/1953 train KL 1.599 val KL 1.607 context/base 0.000 (119s)
+01:02:04   step 600/1953 train KL 1.684 val KL 1.627 context/base 0.000 (177s)
+01:03:03   step 800/1953 train KL 1.745 val KL 1.632 context/base 0.000 (236s)
+01:04:02   step 1000/1953 train KL 1.691 val KL 1.633 context/base 0.000 (295s)
+01:05:00   step 1200/1953 train KL 1.651 val KL 1.608 context/base 0.000 (354s)
+01:05:59   step 1400/1953 train KL 1.874 val KL 1.647 context/base 0.000 (412s)
+01:06:58   step 1600/1953 train KL 1.813 val KL 1.661 context/base 0.000 (471s)
+01:07:57   step 1800/1953 train KL 1.654 val KL 1.645 context/base 0.000 (530s)
+01:08:41   step 1952/1953 train KL 1.564 val KL 1.628 context/base 0.000 (575s)
+01:09:25   ws_learned_A   s=1: alpha=0.429 greedy=0.428 KL=1.680 tok/round=0.701171875
+01:09:25   warmstart phase B control: continue without context
+01:09:26   step 0/1953 train KL 1.725 val KL 1.651 context/base 0.000 (1s)
+01:10:25   step 200/1953 train KL 1.717 val KL 1.627 context/base 0.000 (60s)
+01:11:24   step 400/1953 train KL 1.801 val KL 1.638 context/base 0.000 (119s)
+01:12:23   step 600/1953 train KL 1.675 val KL 1.644 context/base 0.000 (177s)
+01:13:21   step 800/1953 train KL 1.625 val KL 1.648 context/base 0.000 (236s)
+01:14:20   step 1000/1953 train KL 1.780 val KL 1.664 context/base 0.000 (295s)
+01:15:19   step 1200/1953 train KL 1.836 val KL 1.655 context/base 0.000 (354s)
+01:16:18   step 1400/1953 train KL 1.879 val KL 1.663 context/base 0.000 (412s)
+01:17:17   step 1600/1953 train KL 1.521 val KL 1.656 context/base 0.000 (471s)
+01:18:15   step 1800/1953 train KL 1.594 val KL 1.663 context/base 0.000 (530s)
+01:19:00   step 1952/1953 train KL 1.712 val KL 1.662 context/base 0.000 (575s)
+01:19:44   ws_learned_AB  s=1: alpha=0.429 greedy=0.423 KL=1.689 tok/round=0.70703125
+01:19:44   warmstart phase B guided: continue with context
+01:19:45   step 0/1953 train KL 1.725 val KL 1.649 context/base 0.000 (1s)
+01:20:52   step 200/1953 train KL 1.722 val KL 1.647 context/base 0.012 (68s)
+01:21:58   step 400/1953 train KL 1.730 val KL 1.647 context/base 0.021 (134s)
+01:23:05   step 600/1953 train KL 1.701 val KL 1.686 context/base 0.030 (201s)
+01:24:12   step 800/1953 train KL 1.680 val KL 1.671 context/base 0.039 (268s)
+01:25:18   step 1000/1953 train KL 1.815 val KL 1.690 context/base 0.045 (335s)
+01:26:25   step 1200/1953 train KL 1.905 val KL 1.687 context/base 0.050 (401s)
+01:27:32   step 1400/1953 train KL 1.914 val KL 1.692 context/base 0.054 (468s)
+01:28:39   step 1600/1953 train KL 1.628 val KL 1.683 context/base 0.055 (535s)
+01:29:45   step 1800/1953 train KL 1.635 val KL 1.700 context/base 0.056 (601s)
+01:30:36   step 1952/1953 train KL 1.807 val KL 1.685 context/base 0.056 (652s)
+01:31:43   ws_guided_AB   s=1: alpha=0.422 greedy=0.419 KL=1.733 tok/round=0.662109375
+01:31:49   ws_guided_AB   s=3: alpha=0.420 greedy=0.419 KL=1.747 tok/round=
+01:31:49 == lut:nearest:8:down@4-15
+01:31:51   fit nearest L=8: layer 4 done (3s)
+01:31:54   fit nearest L=8: layer 5 done (5s)
+01:31:57   fit nearest L=8: layer 6 done (8s)
+01:31:59   fit nearest L=8: layer 7 done (10s)
+01:32:02   fit nearest L=8: layer 8 done (13s)
+01:32:04   fit nearest L=8: layer 9 done (16s)
+01:32:07   fit nearest L=8: layer 10 done (18s)
+01:32:10   fit nearest L=8: layer 11 done (21s)
+01:32:12   fit nearest L=8: layer 12 done (23s)
+01:32:15   fit nearest L=8: layer 13 done (26s)
+01:32:17   fit nearest L=8: layer 14 done (28s)
+01:32:20   fit nearest L=8: layer 15 done (31s)
+01:32:20   warmstart phase A: learned row choice, no context
+01:32:21   step 0/1953 train KL 4.276 val KL 3.934 context/base 0.000 (1s)
+01:33:15   step 200/1953 train KL 2.173 val KL 2.311 context/base 0.000 (55s)
+01:34:10   step 400/1953 train KL 2.329 val KL 2.381 context/base 0.000 (110s)
+01:35:04   step 600/1953 train KL 2.481 val KL 2.390 context/base 0.000 (164s)
+01:35:59   step 800/1953 train KL 2.714 val KL 2.445 context/base 0.000 (219s)
+01:36:53   step 1000/1953 train KL 2.407 val KL 2.428 context/base 0.000 (273s)
+01:37:48   step 1200/1953 train KL 2.336 val KL 2.406 context/base 0.000 (327s)
+01:38:42   step 1400/1953 train KL 2.541 val KL 2.402 context/base 0.000 (382s)
+01:39:36   step 1600/1953 train KL 2.554 val KL 2.425 context/base 0.000 (436s)
+01:40:31   step 1800/1953 train KL 2.365 val KL 2.424 context/base 0.000 (491s)
+01:41:12   step 1952/1953 train KL 2.306 val KL 2.421 context/base 0.000 (532s)
+01:41:54   ws_learned_A   s=1: alpha=0.356 greedy=0.379 KL=2.468 tok/round=0.6328125
+01:41:54   warmstart phase B control: continue without context
+01:41:55   step 0/1953 train KL 2.274 val KL 2.425 context/base 0.000 (1s)
+01:42:49   step 200/1953 train KL 2.695 val KL 2.412 context/base 0.000 (55s)
+01:43:44   step 400/1953 train KL 2.882 val KL 2.425 context/base 0.000 (110s)
+01:44:38   step 600/1953 train KL 2.295 val KL 2.422 context/base 0.000 (164s)
+01:45:32   step 800/1953 train KL 2.492 val KL 2.399 context/base 0.000 (219s)
+01:46:27   step 1000/1953 train KL 2.689 val KL 2.417 context/base 0.000 (273s)
+01:47:21   step 1200/1953 train KL 2.570 val KL 2.418 context/base 0.000 (327s)
+01:48:16   step 1400/1953 train KL 2.751 val KL 2.406 context/base 0.000 (382s)
+01:49:10   step 1600/1953 train KL 2.282 val KL 2.414 context/base 0.000 (436s)
+01:50:04   step 1800/1953 train KL 2.313 val KL 2.396 context/base 0.000 (491s)
+01:50:46   step 1952/1953 train KL 2.516 val KL 2.408 context/base 0.000 (532s)
+01:51:27   ws_learned_AB  s=1: alpha=0.359 greedy=0.384 KL=2.451 tok/round=0.640625
+01:51:27   warmstart phase B guided: continue with context
+01:51:28   step 0/1953 train KL 2.274 val KL 2.427 context/base 0.000 (1s)
+01:52:26   step 200/1953 train KL 2.801 val KL 2.452 context/base 0.016 (59s)
+01:53:24   step 400/1953 train KL 2.909 val KL 2.462 context/base 0.037 (116s)
+01:54:21   step 600/1953 train KL 2.405 val KL 2.459 context/base 0.059 (174s)
+01:55:19   step 800/1953 train KL 2.576 val KL 2.461 context/base 0.079 (232s)
+01:56:17   step 1000/1953 train KL 2.734 val KL 2.462 context/base 0.096 (289s)
+01:57:14   step 1200/1953 train KL 2.653 val KL 2.497 context/base 0.109 (347s)
+01:58:12   step 1400/1953 train KL 2.890 val KL 2.495 context/base 0.118 (405s)
+01:59:09   step 1600/1953 train KL 2.394 val KL 2.532 context/base 0.122 (462s)
+02:00:07   step 1800/1953 train KL 2.511 val KL 2.510 context/base 0.124 (520s)
+02:00:51   step 1952/1953 train KL 2.599 val KL 2.511 context/base 0.124 (564s)
+02:01:54   ws_guided_AB   s=1: alpha=0.347 greedy=0.366 KL=2.569 tok/round=0.58984375
+02:01:59   ws_guided_AB   s=3: alpha=0.342 greedy=0.363 KL=2.588 tok/round=
+02:01:59 done
+WS2_DONE
