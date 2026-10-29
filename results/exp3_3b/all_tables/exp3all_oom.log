@@ -1,0 +1,42 @@
+/opt/pytorch/lib/python3.12/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 6312.30it/s]
+Loading weights:   0%|          | 0/254 [00:00<?, ?it/s]Loading weights: 100%|██████████| 254/254 [00:00<00:00, 5674.74it/s]
+02:38:15 target feature layers (hidden_states index): [2, 8, 14, 20, 26]
+02:38:59 == lut:nearest:8:all
+02:39:08   fit nearest L=8: layer 0 done (8s)
+02:39:11   fit nearest L=8: layer 1 done (12s)
+02:39:15   fit nearest L=8: layer 2 done (15s)
+02:39:19   fit nearest L=8: layer 3 done (19s)
+02:39:22   fit nearest L=8: layer 4 done (23s)
+02:39:26   fit nearest L=8: layer 5 done (26s)
+02:39:30   fit nearest L=8: layer 6 done (30s)
+02:39:33   fit nearest L=8: layer 7 done (34s)
+02:39:37   fit nearest L=8: layer 8 done (37s)
+02:39:41   fit nearest L=8: layer 9 done (41s)
+02:39:44   fit nearest L=8: layer 10 done (45s)
+02:39:48   fit nearest L=8: layer 11 done (48s)
+02:39:52   fit nearest L=8: layer 12 done (52s)
+02:39:55   fit nearest L=8: layer 13 done (56s)
+02:39:59   fit nearest L=8: layer 14 done (59s)
+02:40:03   fit nearest L=8: layer 15 done (63s)
+02:40:41   nearest  base=nearest s=1: alpha=0.030 greedy=0.007 KL=7.734 tok/round=0.00390625
+02:40:42   joint (base nearest): training 1957.3M parameters
+02:40:44   step 0/3906 train KL 7.183 val KL 6.796 context/base 0.000 (2s)
+Traceback (most recent call last):
+  File "/home/ubuntu/work/experiments/exp3_guided.py", line 451, in <module>
+    main()
+  File "/home/ubuntu/work/experiments/exp3_guided.py", line 428, in main
+    curve, secs = train(target, drafter, fusion, state, mods, trn, val, args, device)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/work/experiments/exp3_guided.py", line 254, in train
+    loss.backward()
+  File "/opt/pytorch/lib/python3.12/site-packages/torch/_tensor.py", line 648, in backward
+    torch.autograd.backward(
+  File "/opt/pytorch/lib/python3.12/site-packages/torch/autograd/__init__.py", line 353, in backward
+    _engine_run_backward(
+  File "/opt/pytorch/lib/python3.12/site-packages/torch/autograd/graph.py", line 824, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 128.00 MiB. GPU 0 has a total capacity of 44.39 GiB of which 35.38 MiB is free. Including non-PyTorch memory, this process has 44.35 GiB memory in use. Of the allocated memory 40.43 GiB is allocated by PyTorch, and 3.37 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+ALL_DONE

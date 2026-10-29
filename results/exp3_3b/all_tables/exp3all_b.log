@@ -1,0 +1,48 @@
+/opt/pytorch/lib/python3.12/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 5362.62it/s]
+Loading weights:   0%|          | 0/254 [00:00<?, ?it/s]Loading weights: 100%|██████████| 254/254 [00:00<00:00, 5092.73it/s]
+03:19:53 target feature layers (hidden_states index): [2, 8, 14, 20, 26]
+03:20:32 == lut:nearest:8:all@2-15
+03:20:36   fit nearest L=8: layer 2 done (4s)
+03:20:40   fit nearest L=8: layer 3 done (7s)
+03:20:43   fit nearest L=8: layer 4 done (11s)
+03:20:47   fit nearest L=8: layer 5 done (15s)
+03:20:51   fit nearest L=8: layer 6 done (18s)
+03:20:54   fit nearest L=8: layer 7 done (22s)
+03:20:58   fit nearest L=8: layer 8 done (26s)
+03:21:02   fit nearest L=8: layer 9 done (29s)
+03:21:05   fit nearest L=8: layer 10 done (33s)
+03:21:09   fit nearest L=8: layer 11 done (37s)
+03:21:13   fit nearest L=8: layer 12 done (40s)
+03:21:16   fit nearest L=8: layer 13 done (44s)
+03:21:20   fit nearest L=8: layer 14 done (48s)
+03:21:24   fit nearest L=8: layer 15 done (51s)
+03:21:57   nearest  base=nearest s=1: alpha=0.060 greedy=0.108 KL=5.921 tok/round=0.09765625
+03:21:57   joint (base nearest): training 1712.6M parameters
+/opt/pytorch/lib/python3.12/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+03:21:59   step 0/3906 train KL 5.531 val KL 5.099 context/base 0.000 (1s)
+03:23:26   step 200/3906 train KL 3.244 val KL 3.473 context/base 0.000 (88s)
+03:24:53   step 400/3906 train KL 3.284 val KL 3.432 context/base 0.000 (175s)
+03:26:20   step 600/3906 train KL 3.440 val KL 3.284 context/base 0.000 (262s)
+03:27:48   step 800/3906 train KL 3.501 val KL 3.257 context/base 0.000 (349s)
+03:29:15   step 1000/3906 train KL 2.890 val KL 3.155 context/base 0.000 (437s)
+03:30:42   step 1200/3906 train KL 2.939 val KL 3.150 context/base 0.000 (524s)
+03:32:10   step 1400/3906 train KL 3.453 val KL 3.131 context/base 0.000 (611s)
+03:33:37   step 1600/3906 train KL 3.136 val KL 3.088 context/base 0.000 (699s)
+03:35:05   step 1800/3906 train KL 2.844 val KL 2.978 context/base 0.000 (787s)
+03:36:32   step 2000/3906 train KL 3.153 val KL 2.945 context/base 0.000 (874s)
+03:38:00   step 2200/3906 train KL 3.040 val KL 2.885 context/base 0.000 (962s)
+03:39:28   step 2400/3906 train KL 2.808 val KL 2.824 context/base 0.000 (1049s)
+03:40:55   step 2600/3906 train KL 2.597 val KL 2.822 context/base 0.000 (1137s)
+03:42:23   step 2800/3906 train KL 3.273 val KL 2.794 context/base 0.000 (1225s)
+03:43:50   step 3000/3906 train KL 2.853 val KL 2.804 context/base 0.000 (1312s)
+03:45:17   step 3200/3906 train KL 2.691 val KL 2.778 context/base 0.000 (1399s)
+03:46:45   step 3400/3906 train KL 2.993 val KL 2.759 context/base 0.000 (1486s)
+03:48:12   step 3600/3906 train KL 3.525 val KL 2.763 context/base 0.000 (1574s)
+03:49:39   step 3800/3906 train KL 3.198 val KL 2.753 context/base 0.000 (1661s)
+03:50:25   step 3905/3906 train KL 2.975 val KL 2.750 context/base 0.000 (1707s)
+03:51:03   joint    base=nearest s=1: alpha=0.326 greedy=0.326 KL=2.779 tok/round=0.431640625
+03:51:03 done
+ALL_DONE

@@ -234,7 +234,11 @@ def train(target, drafter, fusion, state, mods, tokens, val, args, device, use_c
     if fusion is not None and not args.train_fusion:
         for p in fusion.parameters():
             p.requires_grad_(False)
-    opt = torch.optim.Adam(groups, betas=(0.9, 0.99))
+    if args.adam8bit:
+        import bitsandbytes as bnb  # 8-bit optimizer state: needed to train all 112 tables in 48 GB
+        opt = bnb.optim.Adam8bit(groups, betas=(0.9, 0.99))
+    else:
+        opt = torch.optim.Adam(groups, betas=(0.9, 0.99), foreach=False)  # no full-size temporaries
     base_lrs = [g["lr"] for g in opt.param_groups]
     n_steps = math.ceil(tokens.shape[0] / args.train_batch)
     gen = torch.Generator().manual_seed(args.seed)
@@ -276,6 +280,7 @@ def main():
     ap.add_argument("--train-tokens", type=int, default=1_000_000)
     ap.add_argument("--train-batch", type=int, default=2)
     ap.add_argument("--lr", type=float, default=1e-3)
+    ap.add_argument("--adam8bit", action="store_true", help="8-bit Adam state (bitsandbytes)")
     ap.add_argument("--train-fusion", action="store_true", help="also train the fusion projection (default: fixed random)")
     ap.add_argument("--ctx-lr", type=float, default=1e-4, help="context path learning rate in the warmstart variant")
     ap.add_argument("--table-lr", type=float, default=0.02, help="tables and centroids, relative to their std")

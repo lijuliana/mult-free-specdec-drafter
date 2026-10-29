@@ -1,0 +1,19 @@
+{
+  "llama-3.2-3b": 10.5466064453125,
+  "llama-3.1-8b": 22.20598388671875,
+  "16-bit": 4.3288882446289065,
+  "4-bit, all projections": 2.332025604248047,
+  "tables, all projections": 2.3704576110839843,
+  "tables on attention 2-15, 16-bit rest": 4.138188781738282,
+  "tables on attention 2-15, 4-bit rest": 2.51863037109375,
+  "tables on down 4-15 and attention 2-15, 4-bit rest": 2.480116424560547,
+  "tables on MLP, 4-bit attention": 2.1587353515625,
+  "tables on MLP 4-15, 4-bit rest": 2.2050099182128906,
+  "tables on attention, 4-bit MLP": 2.5467494201660155,
+  "tables in layers 2-15, 4-bit layers 0-1": 2.366340789794922,
+  "4-bit, all projections, 4-bit head": 1.8009068298339843,
+  "tables in layers 2-15, 4-bit layers 0-1, 4-bit head": 1.837445068359375,
+  "tables on MLP, 4-bit attention, 4-bit head": 1.6308723449707032,
+  "tables on attention 2-15, 4-bit rest, 4-bit head": 1.9875634765625,
+  "tables, all projections, 4-bit head": 1.8391644287109374
+}
