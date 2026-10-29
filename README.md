@@ -16,25 +16,18 @@ so output quality is unchanged.
 ## Status
 
 Llama-3.2-1B drafter, Llama-3.2-3B target (Llama-3.1-8B access pending), WikiText-103, one A10G. Tables
-use 16 centroids per chunk of 8 inputs. Acceptance is the per-token acceptance rate against the target.
+use 16 centroids per chunk of 8 inputs, with 8-bit entries. Acceptance is the per-token acceptance rate
+against the target. Timing is one decode step at batch 1 with a 16-bit output head; projections without
+tables run at 4 bits. In the acceptance runs, projections without tables stayed exact (16 bits).
 
-| Drafter | Acceptance | ms per draft token |
-| --- | --- | --- |
-| Exact 16-bit | 0.74 | 6.56 |
-| 4-bit weights | 0.66 | 3.47 |
-| Tables in every projection | 0.03 | 3.39 |
-| Tables on attention, layers 2–15, rest exact; fine-tuned | 0.44 | |
-| Tables on MLP down-projections, layers 4–15, rest exact; tables, centroids and row choice trained | 0.45 | |
-| Same, with the target's features guiding the row choice | no gain over the same training without them | |
-
-Tables on part of the drafter, with 4-bit weights everywhere else (timing) and acceptance from the
-best training without and with the target's features:
-
-| Tables on | ms per draft token | Acceptance needed to match 4-bit | Best acceptance, no features | With features (same training without them) |
+| Drafter | ms per draft token | Acceptance needed to match 4-bit | Acceptance, best without target features | Acceptance with target features (same training without them) |
 | --- | --- | --- | --- | --- |
-| Attention, layers 2–15 | 3.63 | 0.67 | 0.44 | 0.42 (0.43) |
-| MLP down-projections, layers 4–15 | about 3.38 | about 0.65 | 0.45 | 0.35 (0.36) |
-| All MLP projections, layers 4–15 | 3.24 | 0.64 | 0.06, untrained | not run |
+| Exact 16-bit | 6.55 | 0.83 | 0.74 | |
+| 4-bit weights everywhere | 3.45 | 0.66 | 0.66 | |
+| Tables everywhere | 3.38 | 0.65 | 0.03 untrained | |
+| Tables on attention, layers 2–15 | 3.63 | 0.67 | 0.44 | 0.42 (0.43) |
+| Tables on MLP down-projections, layers 4–15 | about 3.38 (estimated) | about 0.65 | 0.45 | 0.35 (0.36) |
+| Tables on all MLP projections, layers 4–15 | 3.24 | 0.64 | 0.06 untrained | not run |
 
 What we know:
 
